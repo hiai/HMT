@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="cn.edu.scau.hometown">
+    package="cn.edu.scau.hometown" >
     />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -13,7 +13,7 @@
         android:name=".MyApplication"
         android:allowBackup="true"
         android:label="@string/app_name"
-        android:screenOrientation="portrait">
+        android:screenOrientation="portrait" >
         <activity
             android:name=".activities.MainActivity"
             android:theme="@style/AppTheme" />
@@ -35,9 +35,10 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.SplashActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -48,15 +49,50 @@
             android:name=".activities.PushCommendAcitivity"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".activities.DetialUsedMarketActivity"
-            android:theme="@style/AppTheme.Transparent"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
-        <activity android:name=".activities.SettingActivity"
+            android:name=".activities.SettingActivity"
+            android:theme="@style/AppTheme" >
+        </activity>
+        <activity
+            android:name=".activities.PublishPostActivity"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".activities.SecondHandMarketGoodsDetailActivity"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".activities.DigitalSaleActivity"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".activities.FindPartTimeAcitivity"
+            android:theme="@style/AppTheme" >
+        </activity>
+        <activity
+            android:name=".activities.HouseRentActivity"
+            android:theme="@style/AppTheme" >
+        </activity>
+        <activity
+            android:name=".activities.DailySuppliesActivity"
+            android:theme="@style/AppTheme" >
+        </activity>
+        <activity
+            android:name=".activities.BikeSaleActivity"
+            android:theme="@style/AppTheme" >
+        </activity>
+        <activity
+            android:name=".activities.BookSaleActivity"
+            android:theme="@style/AppTheme" >
+        </activity>
+        <activity
+            android:name=".activities.SecondHandMarketMoreGoodsActivity"
+            android:theme="@style/AppTheme" >
+        </activity>
+        <activity
+            android:name=".activities.SecondHandMarketSearchActivity"
+            android:theme="@style/AppTheme" >
+        </activity>
+        <activity
+            android:name=".activities.SecondHandMarketSearchResultActivity"
             android:theme="@style/AppTheme">
         </activity>
-        <activity android:name=".activities.PublishPostActivity"
-            android:theme="@style/AppTheme" />
-
     </application>
 
 </manifest>

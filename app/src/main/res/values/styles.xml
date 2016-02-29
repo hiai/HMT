@@ -66,4 +66,25 @@
         <item name="android:windowEnterAnimation">@anim/in_from_buttom</item>
         <item name="android:windowExitAnimation">@anim/out_to_buttom</item>
     </style>
+
+    <style name="radiobuttonstyle">
+        <item name="android:layout_width">80dp</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:button">@null</item>
+        <item name="android:gravity">center</item>
+    </style>
+    <style name="radiobuttonstyle1">
+        <item name="android:layout_width">180dp</item>
+        <item name="android:layout_height">30dp</item>
+        <item name="android:button">@null</item>
+        <item name="android:gravity">center</item>
+    </style>
+    <style name="radiobuttonstyle2">
+        <item name="android:layout_width">70dp</item>
+        <item name="android:layout_height">25dp</item>
+        <item name="android:button">@null</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+
 </resources>

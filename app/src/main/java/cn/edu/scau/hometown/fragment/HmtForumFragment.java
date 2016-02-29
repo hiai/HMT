@@ -83,8 +83,8 @@ public class HmtForumFragment extends Fragment {
 
         if (hmtForumPostList == null)
             VolleyRequestString(HttpUtil.GET_PICTURES_GUIDE_TO_THREADS, 3);
-        else
-            initBGAanner();
+       else
+       initBGAanner();
         if (imagesGuideToThreads == null)
             VolleyRequestString(HttpUtil.GET_HMT_FORUM_POSTS_CONTENT_BY_FID + "36" + "&page=1&limit=20", 1);
         else

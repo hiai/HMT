@@ -253,7 +253,9 @@ public class HmtPartitionActivity extends AppCompatActivity {
                 super.onScrolled(recyclerView, dx, dy);
 
                 lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
+
                 if (lastVisibleItem + 4 == initHmtForumListViewAdapter.getItemCount()) {
+                    Log.i("test", "yes");
                     VolleyRequestString(HttpUtil.GET_HMT_FORUM_POSTS_CONTENT_BY_FID + getFidByPartitionName(title) + "&page=" + nextPage + "&limit=30", 1);
                     initHmtForumListViewAdapter.notifyDataSetChanged();
                     mSwipeRefreshWidget.setRefreshing(false);

@@ -4,14 +4,9 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * Created by Administrator on 2015/10/11 0011.
+ * Created by lenovo on 2015/11/16.
  */
-public class SecondMarketData3 implements Serializable{
-
-    /**
-     * goods : [{"secondgoods_id":"42","secondgoods_price":"12","secondgoods_name":"啊啊啊啊","secondgoods_views":"0","secondgoods_bewrite":"啊啊啊啊啊啊啊啊啊","secondgoods_postdate":"1433378255","secondgoods_pastdate":"1433637455","secondgoods_picture":null},{"secondgoods_id":"34","secondgoods_price":"1000","secondgoods_name":"没有电脑","secondgoods_views":"2","secondgoods_bewrite":"没有电脑卖","secondgoods_postdate":"1433243328","secondgoods_pastdate":"1433502528","secondgoods_picture":null},{"secondgoods_id":"21","secondgoods_price":"12","secondgoods_name":"第三方斯蒂芬","secondgoods_views":"0","secondgoods_bewrite":"fjdskfjd","secondgoods_postdate":"1432222416","secondgoods_pastdate":"1432481616","secondgoods_picture":null},{"secondgoods_id":"22","secondgoods_price":"12","secondgoods_name":"第三方斯蒂芬","secondgoods_views":"0","secondgoods_bewrite":"fjdskfjd","secondgoods_postdate":"1432222416","secondgoods_pastdate":"1432481616","secondgoods_picture":null},{"secondgoods_id":"19","secondgoods_price":"12","secondgoods_name":"第三方","secondgoods_views":"0","secondgoods_bewrite":"撒地方第三方","secondgoods_postdate":"1432213015","secondgoods_pastdate":"1432472215","secondgoods_picture":null},{"secondgoods_id":"20","secondgoods_price":"12","secondgoods_name":"第三方","secondgoods_views":"0","secondgoods_bewrite":"撒地方第三方","secondgoods_postdate":"1432213015","secondgoods_pastdate":"1432472215","secondgoods_picture":null}]
-     * page : <nav><ul class="pagination">    </ul></nav>
-     */
+public class SecondHandMarketCategoryBean implements Serializable {
 
     private String page;
     private List<GoodsEntity> goods;
@@ -32,15 +27,15 @@ public class SecondMarketData3 implements Serializable{
         return goods;
     }
 
-    public static class GoodsEntity  implements Serializable{
+    public static class GoodsEntity implements Serializable{
         /**
-         * secondgoods_id : 42
+         * secondgoods_id : 58
          * secondgoods_price : 12
-         * secondgoods_name : 啊啊啊啊
-         * secondgoods_views : 0
-         * secondgoods_bewrite : 啊啊啊啊啊啊啊啊啊
-         * secondgoods_postdate : 1433378255
-         * secondgoods_pastdate : 1433637455
+         * secondgoods_name : 商品fromalextest7
+         * secondgoods_views : 12
+         * secondgoods_bewrite : 疯狂点开始放假
+         * secondgoods_postdate : 1435635503
+         * secondgoods_pastdate : 1435894703
          * secondgoods_picture : null
          */
 
@@ -51,7 +46,7 @@ public class SecondMarketData3 implements Serializable{
         private String secondgoods_bewrite;
         private String secondgoods_postdate;
         private String secondgoods_pastdate;
-        private Object secondgoods_picture;
+        private String  secondgoods_picture;
 
         public void setSecondgoods_id(String secondgoods_id) {
             this.secondgoods_id = secondgoods_id;
@@ -81,9 +76,6 @@ public class SecondMarketData3 implements Serializable{
             this.secondgoods_pastdate = secondgoods_pastdate;
         }
 
-        public void setSecondgoods_picture(Object secondgoods_picture) {
-            this.secondgoods_picture = secondgoods_picture;
-        }
 
         public String getSecondgoods_id() {
             return secondgoods_id;
@@ -113,8 +105,13 @@ public class SecondMarketData3 implements Serializable{
             return secondgoods_pastdate;
         }
 
-        public Object getSecondgoods_picture() {
+
+        public String getSecondgoods_picture() {
             return secondgoods_picture;
+        }
+
+        public void setSecondgoods_picture(String secondgoods_picture) {
+            this.secondgoods_picture = secondgoods_picture;
         }
     }
 }
