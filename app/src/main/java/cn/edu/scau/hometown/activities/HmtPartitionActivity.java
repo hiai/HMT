@@ -66,7 +66,6 @@ public class HmtPartitionActivity extends AppCompatActivity {
                         .getDisplayMetrics()));
         VolleyRequestString(HttpUtil.GET_HMT_FORUM_POSTS_CONTENT_BY_FID + getFidByPartitionName(title) + "&page=" + nextPage + "&limit=30", 1);
 
-
     }
 
     private void initToolBar() {
@@ -165,7 +164,7 @@ public class HmtPartitionActivity extends AppCompatActivity {
                     }
                 }
         );
-
+        mJsonRequest.setTag(true);
         mRequestQueue.add(mJsonRequest);
     }
 
@@ -264,5 +263,13 @@ public class HmtPartitionActivity extends AppCompatActivity {
             }
         });
         mSwipeRefreshWidget.setRefreshing(false);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        initHmtForumListViewAdapter.clean();
+        mRequestQueue.stop();
+        mRequestQueue.cancelAll(true);
     }
 }

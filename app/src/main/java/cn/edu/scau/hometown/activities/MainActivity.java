@@ -1,6 +1,7 @@
 package cn.edu.scau.hometown.activities;
 
 import android.animation.ArgbEvaluator;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -12,10 +13,11 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.Menu;
-
+import android.widget.ImageView;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 
@@ -40,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     //判断在不同的Fragment中显示不同的snackBar背景颜色
     private String snackBarBackGroupColor = "Tab_red";
     private Toolbar toolbar;
+    private ImageView iv_search;
     //抽屉式布局
     private DrawerLayout mDrawerLayout;
     private TabLayout mTabLayout;
@@ -49,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Fresco.initialize(this);
+        Fresco.initialize(getApplicationContext());
         setContentView(R.layout.activity_main);
         ll_main = (CoordinatorLayout) findViewById(R.id.main);
         fragments=new ArrayList<Fragment>();
@@ -70,14 +73,12 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setBackgroundColor(getResources().getColor(R.color.tab_red));
         setSupportActionBar(toolbar);
 
-
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerlayout);
         final ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
                 toolbar, R.string.app_name, R.string.app_name);
         mDrawerLayout.setDrawerListener(drawerToggle);
         drawerToggle.syncState();
     }
-
 
 
     private void InitTabLayout() {
@@ -155,8 +156,6 @@ public class MainActivity extends AppCompatActivity {
                 }
 
 
-
-
             }
 
             @Override
@@ -208,14 +207,36 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         }
-
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        this.getMenuInflater().inflate(R.menu.menu_main, menu);
+        final SearchView sv = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Intent intent = new Intent(MainActivity.this, ResultOfSearchActivity.class);
+                intent.putExtra("keyWord", query);
+                startActivity(intent);
+                sv.setQuery("", false);
+                sv.clearFocus();
+                sv.setIconified(true);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
         return true;
     }
+
+
+
+
 }
 class FragAdapter extends FragmentPagerAdapter {
     private List<Fragment> fragments;

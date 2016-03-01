@@ -34,6 +34,7 @@ public class HttpUtil {
     public static final String GET_HMT_FORUM_POSTS_CONTENT_BY_FID="http://hometown.scau.edu.cn/bbs/plugin.php?id=iltc_open:thread&fid=";
     public static final String GET_PICTURES_GUIDE_TO_THREADS="http://hometown.scau.edu.cn/bbs/plugin.php?id=iltc_open:xshow&action=image";
     public static final String GET_POST_THREADS_ATTACHMENT_BY_TID_AND_AID="http://hometown.scau.edu.cn/bbs/plugin.php?id=iltc_open:attachment&action=view&tid=";
+
     public static final String GET_SECOND_MARKET_DATA="http://202.116.162.17/index.php/Home/Api";
     public static final String GET_SECOND_MARKET_GOOD_BY_GID="http://202.116.162.17/index.php/Home/Api/good/id/";
     public static final String GET_SECOND_MARKET_GOOD_BY_DIRECTORY_ID="http://202.116.162.17/index.php/Home/Api/catalog/cate/";
@@ -42,6 +43,13 @@ public class HttpUtil {
     public static final String GET_SECOND_MARKET_GOOD_PIC="http://202.116.162.17/index.php/Home/Api/pics";
     public static final String GET_SECOND_MARKET_GOOD_SALE_PAGE= "http://market.h.jaylin.me/index.php/Home/Api/index/p/";
     public static final String GET_SECOND_MARKET_GOOD_PURCHASE_PAGE= "http://202.116.162.17/index.php/Home/Api/purchase/index/p/";
+
+
+   //获取压缩图
+
+    public static final String GET_POST_THREADS_ATTACHMENT_Scaled_BY_TID_AND_AID="http://202.116.162.17:8200/image/getImage?id=iltc_open:attachment&action=view&tid=";
+
+
     /**
      * @param url 發送請求的url
      * @return 服務器響應請求發送的字符串
@@ -138,6 +146,7 @@ public class HttpUtil {
 
                     }
                 });
+        imageRequest.setTag(true);
         requestQueue.add(imageRequest);
 
 

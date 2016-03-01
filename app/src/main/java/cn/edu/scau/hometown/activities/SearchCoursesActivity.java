@@ -157,8 +157,8 @@ public class SearchCoursesActivity extends SwipeBackActivity implements SearchMe
             }
         });
         // 设置进度条的颜色主题，最多能设置四种
-        lo_swiper.setColorScheme(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
+        lo_swiper.setColorScheme(android.R.color.holo_green_light,
+                android.R.color.holo_blue_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
 
@@ -288,6 +288,7 @@ public class SearchCoursesActivity extends SwipeBackActivity implements SearchMe
                         lo_swiper.setRefreshing(false);
                     }
                 });
+        mJsonRequest.setTag(true);
 
         mRequestQueue.add(mJsonRequest);
     }
@@ -316,5 +317,12 @@ public class SearchCoursesActivity extends SwipeBackActivity implements SearchMe
 
     private void recommend_bt_course_language(){
         Toast.makeText(this,"A",Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mRequestQueue.stop();
+        mRequestQueue.cancelAll(true);
     }
 }

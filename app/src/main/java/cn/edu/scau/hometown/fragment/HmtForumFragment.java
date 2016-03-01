@@ -59,8 +59,9 @@ public class HmtForumFragment extends Fragment {
     //论坛图片信息类
     private ImagesGuideToThreads imagesGuideToThreads;
     private String tid;
+    private String authorName="";
     private BGABanner banner;
-    private boolean isClick =false;
+    private boolean isClick = false;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -121,10 +122,10 @@ public class HmtForumFragment extends Fragment {
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(!isClick){
+                    if (!isClick) {
                         VolleyRequestString(HttpUtil.GET_HMT_FORUM_POSTS_CONTENT_BY_TID + tid, 2);
                     }
-                    isClick=true;
+                    isClick = true;
                 }
             });
             com.nostra13.universalimageloader.core.ImageLoader.getInstance().displayImage(urls.get(i), imageView, options);
@@ -135,7 +136,6 @@ public class HmtForumFragment extends Fragment {
         banner.setVisibility(View.VISIBLE);
 
     }
-
 
 
     /**
@@ -150,11 +150,13 @@ public class HmtForumFragment extends Fragment {
                 new RecyclerItemClickListener(getActivity(), new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        if(!isClick){
+                        if (!isClick) {
                             tid = hmtForumPostList.getThreads().get(position).getTid();
-                            VolleyRequestString(HttpUtil.GET_HMT_FORUM_POSTS_CONTENT_BY_TID + tid+"&page=1&limit=10", 2);
+                            authorName=hmtForumPostList.getThreads().get(position).getAuthor();
+                            VolleyRequestString(HttpUtil.GET_HMT_FORUM_POSTS_CONTENT_BY_TID + tid + "&page=1&limit=10", 2);
+
                         }
-                        isClick=true;
+                        isClick = true;
 
                     }
                 })
@@ -232,6 +234,7 @@ public class HmtForumFragment extends Fragment {
         Intent intent = new Intent(getActivity(), DetialHmtPostThreadsActivity.class);
         intent.putExtra("hmtForumPostContent", hmtForumPostContent);
         intent.putExtra("tid", tid);
+        intent.putExtra("author",authorName);
         mSwipeRefreshWidget.setRefreshing(false);
         startActivity(intent);
         getActivity().overridePendingTransition(R.anim.in_from_right, R.anim.keep);

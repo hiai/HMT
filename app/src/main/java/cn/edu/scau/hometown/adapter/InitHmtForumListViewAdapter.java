@@ -36,16 +36,17 @@ public class InitHmtForumListViewAdapter extends RecyclerView.Adapter<InitHmtFor
     private HmtForumPostList hmtForumPostList;
     private DisplayImageOptions options;
     private RequestQueue requestQueue;
+    private Context context;
 
 
-    public InitHmtForumListViewAdapter(HmtForumPostList hmtForumPostList,Context contex) {
+    public InitHmtForumListViewAdapter(HmtForumPostList hmtForumPostList, Context contex) {
         this.hmtForumPostList = hmtForumPostList;
-
-        options=new DisplayImageOptions.Builder()
+        this.context = contex;
+        options = new DisplayImageOptions.Builder()
                 .cacheInMemory(true)
                 .bitmapConfig(Bitmap.Config.ARGB_4444)
                 .build();
-        requestQueue=Volley.newRequestQueue(contex);
+        requestQueue = Volley.newRequestQueue(contex);
     }
 
 
@@ -79,8 +80,11 @@ public class InitHmtForumListViewAdapter extends RecyclerView.Adapter<InitHmtFor
         holder.tv_content_of_forum_threads.setText(EditModified(new SpannableString("\t\t\t" + message)));
         holder.tv_lastpost_of_forum_threads.setText("发表于 " + DataUtil.times(dateline));
 
-       // ImageLoader.getInstance().displayImage(HttpUtil.GET_USER_ICON_BY_USER_ID + authorId,holder.civ_icon_of_forum_threads, options);
-        HttpUtil.setUserIconTask(requestQueue,HttpUtil.GET_USER_ICON_BY_USER_ID + authorId,holder.civ_icon_of_forum_threads);
+        // ImageLoader.getInstance().displayImage(HttpUtil.GET_USER_ICON_BY_USER_ID + authorId,holder.civ_icon_of_forum_threads, options);
+        if (!author.equals("匿名"))
+            HttpUtil.setUserIconTask(requestQueue, HttpUtil.GET_USER_ICON_BY_USER_ID + authorId, holder.civ_icon_of_forum_threads);
+        else
+            holder.civ_icon_of_forum_threads.setImageDrawable(context.getResources().getDrawable(R.drawable.default_user_image));
     }
 
     @Override
@@ -132,6 +136,11 @@ public class InitHmtForumListViewAdapter extends RecyclerView.Adapter<InitHmtFor
             tv_lastpost_of_forum_threads = (TextView) itemView.findViewById(R.id.tv_lastpost_of_forum_threads);
             civ_icon_of_forum_threads = (CircleImageView) itemView.findViewById(R.id.tv_icon_of_forum_threads);
         }
+    }
+    public void clean(){
+        requestQueue.stop();
+        requestQueue.cancelAll(true);
+
     }
 
 }

@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -33,13 +34,16 @@ import cn.edu.scau.hometown.tools.EmoticonsUtils;
 public class SendPostThreadsActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private String author;
+    private String tid;
+    private String posthread;
     private EmoticonsKeyBoardPopWindow mKeyBoardPopWindow;
     private EmoticonsEditText et_content;
     private ImageView inputFace;
     private Button send_post;
     private RequestQueue requestQueue;
-    private String tid;
+
     private CoordinatorLayout rootView;
+    private Button clear_et;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +64,14 @@ public class SendPostThreadsActivity extends AppCompatActivity {
         rootView= (CoordinatorLayout) findViewById(R.id.rootView);
         et_content = (EmoticonsEditText) findViewById(R.id.et_content);
         inputFace = (ImageView) findViewById(R.id.s);
+        clear_et= (Button) findViewById(R.id.clear_et);
+        clear_et.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                et_content.setText("");
+            }
+        });
+
 
         inputFace.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,7 +84,11 @@ public class SendPostThreadsActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                sendPostTask();
+                //检查用户是否登陆
+                if(getAccessToken().equals("尚未授权"))
+                    Toast.makeText(SendPostThreadsActivity.this,"请先登录",Toast.LENGTH_SHORT).show();
+                else
+                    sendPostTask();
             }
         });
     }
@@ -80,6 +96,7 @@ public class SendPostThreadsActivity extends AppCompatActivity {
     private void getIntentData() {
         tid=(String)getIntent().getSerializableExtra("tid");
         author = (String) getIntent().getSerializableExtra("author");
+        posthread= (String) getIntent().getSerializableExtra("posthread");
     }
 
     public void initKeyBoardPopWindow() {
@@ -91,7 +108,7 @@ public class SendPostThreadsActivity extends AppCompatActivity {
 
     private void InitToolBar() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("回复 " + author);
+        toolbar.setTitle("回复 " + "《"+posthread+"》");
         toolbar.setBackgroundColor(getResources().getColor(R.color.tab_blue));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -136,9 +153,9 @@ public class SendPostThreadsActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
 
-                       // Toast.makeText(SendPostThreadsActivity.this,response,Toast.LENGTH_LONG).show();
+                       Toast.makeText(SendPostThreadsActivity.this, response, Toast.LENGTH_LONG).show();
                         //Toast.makeText(SendPostThreadsActivity.this,et_content.getText().toString(),Toast.LENGTH_LONG).show();
-                        SendPostThreadsActivity.this.finish();
+                       // SendPostThreadsActivity.this.finish();
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -155,7 +172,7 @@ public class SendPostThreadsActivity extends AppCompatActivity {
                 map.put("id","iltc_open:post");
                 map.put("access_token", getAccessToken());
                 map.put("message", et_content.getText().toString());
-                map.put("tid", tid);
+                map.put("tid", "857127");
 
                 return map;
             }
@@ -163,7 +180,7 @@ public class SendPostThreadsActivity extends AppCompatActivity {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> headers = new HashMap<String, String>();
-               // headers.put("Charset", "utf-8");
+           //     headers.put("Charset", "utf-8");
                 return headers;
             }
 

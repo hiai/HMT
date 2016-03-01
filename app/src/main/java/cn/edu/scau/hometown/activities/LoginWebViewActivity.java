@@ -73,14 +73,9 @@ public class LoginWebViewActivity extends SwipeBackActivity {
 
     private void initWebView() {
         webView = (WebView) findViewById(R.id.webview);
-//        webView.loadUrl("http://hometown.scau.edu.cn/open/OAuth/authorize?"
-//                + client_id + "&" + redirect_url + "&" + state + "&"
-//                + response_type);
         webView.loadUrl("http://hometown.scau.edu.cn/open/OAuth/authorize?"
                 + client_id + "&" + "redirect_url=localhost" + "&" + state + "&"
                 + "response_type=token" + "&scope=bbs");
-// webView.loadUrl("http://hometown.scau.edu.cn/open/OAuth/authorize?client_id=11&"+redirect_url+"&state=1ebUaX94z0QAdrX4G2t2eTidkI1jOfhi&response_type=token&scope=bbs");
-
         webView.getSettings().setJavaScriptEnabled(true);
         webView.requestFocus();
         webView.getSettings().setLoadWithOverviewMode(true);
@@ -107,10 +102,6 @@ public class LoginWebViewActivity extends SwipeBackActivity {
             @Override
             public void onPageFinished(WebView view, String url) {
                 mSwipeRefreshWidget.setRefreshing(false);
-
-
-
-
                 if (url.contains("uid")) {
                     //【url包含uid，说明登陆成功了，可以获取用户的标识ID，再根据用户的标识ID，发出另一个请求从而获取到用户的所有基本信息】
                     access_token = url.substring(url.indexOf("#access_token") + 14, url.indexOf("&expires_in"));

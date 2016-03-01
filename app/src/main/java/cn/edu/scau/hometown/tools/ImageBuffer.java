@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by ronghua on 2015/10/31.
+ * Created by hiai on 2015/10/31.
  * 把图片保存到SD卡中，优先从SD卡中取图片，没有则从网络上下载
  *
  *

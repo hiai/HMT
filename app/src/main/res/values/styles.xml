@@ -5,7 +5,6 @@
         <!-->      除去ActonBar下面的阴影线               <!-->
         <item name="android:windowContentOverlay">@null</item>
         <item name="windowActionBar">false</item>
-        <item name="android:windowNoTitle">true</item>
         <item name="android:title">""</item>
         <item name="colorPrimary">#2196F3</item>
         <item name="colorPrimaryDark">#1565C0</item>
@@ -15,6 +14,16 @@
 
     <style name="AppTheme.Transparent">
         <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+    <style name="myDialogTheme" parent="android:Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowBackground">@null</item>
+
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
     </style>
 
     <style name="TextTheme">
@@ -67,6 +76,7 @@
         <item name="android:windowExitAnimation">@anim/out_to_buttom</item>
     </style>
 
+
     <style name="radiobuttonstyle">
         <item name="android:layout_width">80dp</item>
         <item name="android:layout_height">50dp</item>
@@ -86,5 +96,18 @@
         <item name="android:gravity">center</item>
     </style>
 
+
+
+    <style name="FullscreenTheme" parent="AppTheme">
+        <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowBackground">@null</item>
+        <item name="metaButtonBarStyle">?android:attr/buttonBarStyle</item>
+        <item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>
+    </style>
+
+    <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/black_overlay</item>
+    </style>
 
 </resources>

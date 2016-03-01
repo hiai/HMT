@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 21
     buildToolsVersion '22.0.1'
-    compileOptions.encoding="UTF-8"
+    compileOptions.encoding = "UTF-8"
 
     defaultConfig {
         applicationId "cn.edu.scau.hometown"
@@ -22,22 +22,37 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile files('src/main/libs/universal-image-loader-1.9.4.jar')
+    compile 'com.nineoldandroids:library:2.4.0'
+    compile project(':XhsEmoticonsKeyboard')
+
     compile 'com.android.support:appcompat-v7:22.2.1'
     compile 'com.android.support:cardview-v7:22.2.1'
     compile 'eu.the4thfloor.volley:com.android.volley:2015.05.28'
     compile 'com.google.code.gson:gson:2.3.1'
     compile 'com.android.support:support-v4:22.2.1'
-    compile 'com.android.support:recyclerview-v7:22.2.1'
+    compile 'com.android.support:recyclerview-v7:23.0.0'
     compile 'de.hdodenhof:circleimageview:1.3.0'
     compile 'me.imid.swipebacklayout.lib:library:1.0.0'
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.android.support:design:22.2.1'
-    compile 'com.android.support:recyclerview-v7:23.0.0'
-    compile files('src/main/libs/universal-image-loader-1.9.4.jar')
-    compile 'com.nineoldandroids:library:2.4.0'
-    compile project(':XhsEmoticonsKeyboard')
     compile 'cn.bingoogolapple:bga-banner:2.0.2'
     compile 'com.bartoszlipinski.recyclerviewheader:library:1.2.0'
-    compile 'com.facebook.fresco:fresco:0.6.0'
+
+
+
+
+    compile 'com.facebook.fresco:fresco:0.9.0+'
+    compile 'com.commit451:PhotoView:1.2.4'
+
+    compile 'io.reactivex:rxandroid:1.1.0'
+    compile 'io.reactivex:rxjava:1.1.0'
+    compile 'com.squareup.retrofit2:retrofit:2.0.0-beta3'
+    compile 'com.squareup.okhttp3:okhttp:3.0.1'
+    compile 'com.jakewharton:disklrucache:2.0.2'
+
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.3'
+    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3'
+
 
 }

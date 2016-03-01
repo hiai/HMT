@@ -14,6 +14,13 @@ public class HmtThreadsAttachment implements Serializable{
 
     private DataEntity data;
     private String status;
+    private String error;
+    public void setError(String error){
+        this.error=error;
+    }
+    public String getError(){
+        return  error;
+    }
 
     public void setData(DataEntity data) {
         this.data = data;
