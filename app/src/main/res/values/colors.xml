@@ -18,7 +18,7 @@
     <color name="title_green_n">#9910B5DE</color>
     <color name="title_green_p">#99009688</color>
     <color name="ll_pressed">#EBEBEB</color>
-
+    <color name="ll_notpressed">#ffffff</color>
     <color name="black_overlay">#66000000</color>
 
     <color name="CircularProgress_red">#FFC93437</color>

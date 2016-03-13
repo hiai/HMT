@@ -2,6 +2,8 @@ package cn.edu.scau.hometown;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -21,6 +23,7 @@ public class MyApplication extends Application {
     //用户信息的数据类
     private HmtUserBasedInfo hmtUserBasedInfo;
     private RefWatcher refWatcher;
+    private static MyApplication instance;
 
 
     public  HmtUserBasedInfo getHmtUserBasedInfo() {
@@ -30,7 +33,7 @@ public class MyApplication extends Application {
     public void setHmtUserBasedInfo(HmtUserBasedInfo hmtUserBasedInfo) {
         this.hmtUserBasedInfo = hmtUserBasedInfo;
     }
-public static RefWatcher getRefWatcher(Context context){
+    public static RefWatcher getRefWatcher(Context context){
     MyApplication application=(MyApplication)context.getApplicationContext();
     return application.refWatcher;
 
@@ -44,5 +47,12 @@ public static RefWatcher getRefWatcher(Context context){
         ImageLoader.getInstance().init(configuration);
         setHmtUserBasedInfo((HmtUserBasedInfo) DataUtil.getObject("登陆数据", this));
          refWatcher = LeakCanary.install(this);
+        instance = this;
+    }
+
+
+    public static MyApplication getInstance() {
+
+        return instance;
     }
 }

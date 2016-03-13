@@ -14,6 +14,10 @@ import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -31,12 +35,14 @@ import cn.edu.scau.hometown.bean.HmtForumPostContent;
 import cn.edu.scau.hometown.bean.HmtForumPostList;
 import cn.edu.scau.hometown.listener.RecyclerItemClickListener;
 import cn.edu.scau.hometown.tools.HttpUtil;
+import cn.edu.scau.hometown.view.HeartView.HeartView;
 
 /**
  * Created by Administrator on 2015/10/4 0004.
  */
 public class HmtPartitionActivity extends AppCompatActivity {
 
+   private  String TAB= "HmtPartitionActivity";
 
     private String tid;
     private String title;
@@ -50,6 +56,10 @@ public class HmtPartitionActivity extends AppCompatActivity {
     private InitHmtForumListViewAdapter initHmtForumListViewAdapter;
     private RecyclerView rcv_hmt_forum;
     private boolean isClick=false;
+
+    private ImageView ivLove;
+    private ImageView ivHate;
+    Animation animation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +75,22 @@ public class HmtPartitionActivity extends AppCompatActivity {
                 .applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24, getResources()
                         .getDisplayMetrics()));
         VolleyRequestString(HttpUtil.GET_HMT_FORUM_POSTS_CONTENT_BY_FID + getFidByPartitionName(title) + "&page=" + nextPage + "&limit=30", 1);
+        animation= AnimationUtils.loadAnimation(this, R.anim.love_hate_image_anim);
+        initView();
+
+    }
+
+    private void initView(){
+        ivLove=(ImageView)findViewById(R.id.item_action_love);
+        ivHate=(ImageView)findViewById(R.id.item_action_hate);
+//       if (ivLove==null)Log.i(TAB, "null");
+//        ivLove.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Log.i(TAB,"onclic");
+//                ivLove.startAnimation(animation);
+//            }
+//        });
 
     }
 

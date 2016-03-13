@@ -60,6 +60,8 @@ import cn.edu.scau.hometown.R;
  * Created by Administrator on 2015/9/2 0002.
  * 用于渲染论坛帖子回帖列表，填充帖子回帖列表视图的Adapter类
  *
+ * 图片缓存将在下一个版本中用Fresco代替，以提升加载速度
+ *
  */
 public class InitDetailHmtForumListViewAdapter extends RecyclerView.Adapter<InitDetailHmtForumListViewAdapter.ViewHolder> {
 
@@ -328,7 +330,7 @@ public class InitDetailHmtForumListViewAdapter extends RecyclerView.Adapter<Init
     }
     private void getAndSetImage(final TextView tv, final SpannableString spannableString, final int startAttach, final int endAttach, String aid) {
 
-        final String url = HttpUtil.GET_POST_THREADS_ATTACHMENT_Scaled_BY_TID_AND_AID + tid + "&aid=" + aid + "&width="+getImageViewWidth(tv);
+        final String url = HttpUtil.GET_POST_THREADS_ATTACHMENT_SCALED_BY_TID_AND_AID + tid + "&aid=" + aid + "&width="+getImageViewWidth(tv);
         Log.i("url--->", url);
         //   判断SD卡缓存中是否已经存在该图片 （压缩图）
         if (ImageBuffer.isExist( url)) {

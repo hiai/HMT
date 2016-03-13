@@ -1,7 +1,10 @@
 package cn.edu.scau.hometown.activities;
 
 import android.animation.ArgbEvaluator;
+import android.app.DownloadManager;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -15,6 +18,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.widget.ImageView;
@@ -25,16 +29,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.edu.scau.hometown.R;
+import cn.edu.scau.hometown.bean.LatestVersionInfo;
+import cn.edu.scau.hometown.broadcastreceiver.InstallNewVersionAppReceiver;
 import cn.edu.scau.hometown.fragment.FocusFragment;
 import cn.edu.scau.hometown.fragment.HmtForumFragment;
 import cn.edu.scau.hometown.fragment.PartitionFragment;
 import cn.edu.scau.hometown.fragment.SecondaryMarketFragment;
+
+import cn.edu.scau.hometown.tools.NewVersionUpdateUtil;
+import cn.edu.scau.hometown.view.CustomDialog;
+import rx.Observable;
+import rx.Observer;
+import rx.Scheduler;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by Administrator on 2015/7/26 0026.
  * 程序已启动时展示的主界面
  */
 public class MainActivity extends AppCompatActivity {
+
+    private String TAG ="MainActivity";
     //计算是否退出应用所需的时间
     private long firstTime;
     //退出时弹出snackBar用到的父级容器
@@ -49,13 +66,16 @@ public class MainActivity extends AppCompatActivity {
     private List<Fragment> fragments;
     private FragAdapter mAdapter;
 
+    private LatestVersionInfo info;
+    private InstallNewVersionAppReceiver receiver;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Fresco.initialize(getApplicationContext());
         setContentView(R.layout.activity_main);
         ll_main = (CoordinatorLayout) findViewById(R.id.main);
-        fragments=new ArrayList<Fragment>();
+        fragments = new ArrayList<Fragment>();
         fragments.add(new SecondaryMarketFragment());
         fragments.add(new HmtForumFragment());
         fragments.add(new PartitionFragment());
@@ -63,7 +83,11 @@ public class MainActivity extends AppCompatActivity {
 
         InitToolBar();
         InitTabLayout();
+        NewVersionUpdateUtil.checkUpdate(this,false);
+
     }
+
+
 
 
 
@@ -80,6 +104,11 @@ public class MainActivity extends AppCompatActivity {
         drawerToggle.syncState();
     }
 
+    @Override
+    protected void onDestroy() {
+        NewVersionUpdateUtil.unregisterReceiver(this);
+        super.onDestroy();
+    }
 
     private void InitTabLayout() {
 
@@ -174,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        mAdapter=new FragAdapter(getSupportFragmentManager(),fragments);
+        mAdapter = new FragAdapter(getSupportFragmentManager(), fragments);
         mTabLayout.setTabsFromPagerAdapter(mAdapter);
         viewPager.setAdapter(mAdapter);
         mTabLayout.setupWithViewPager(viewPager);
@@ -235,9 +264,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-
 }
+
 class FragAdapter extends FragmentPagerAdapter {
     private List<Fragment> fragments;
 
@@ -263,11 +291,11 @@ class FragAdapter extends FragmentPagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        if(position==0) return "二手";
-        else if(position==1) return "推荐";
-        else if(position==2) return "分区";
-        else if(position==3) return "关注";
-        else return  "其它";
+        if (position == 0) return "二手";
+        else if (position == 1) return "推荐";
+        else if (position == 2) return "分区";
+        else if (position == 3) return "关注";
+        else return "其它";
     }
 
 }

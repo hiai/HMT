@@ -67,7 +67,6 @@ public class PhotoViewActivity extends AppCompatActivity implements OnClickListe
     private  Handler mhandler;
     private  CloseableStaticBitmap image;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,7 +77,6 @@ public class PhotoViewActivity extends AppCompatActivity implements OnClickListe
         url=(String)getIntent().getSerializableExtra("url");
         getImage();
         mhandler=new Handler();
-
     }
 
 
@@ -89,14 +87,10 @@ public class PhotoViewActivity extends AppCompatActivity implements OnClickListe
         savePhoto=(Button)findViewById(R.id.savePhoto);
         viewGroup=(ViewGroup)findViewById(R.id.rl_parent);
         savePhoto.setOnClickListener(this);
-
     }
     private void initToolbar(){
-
         toolbar.setBackgroundColor(getResources().getColor(R.color.tab_blue));
         setSupportActionBar(toolbar);
-
-
     }
     private void getImage(){
        Uri uri = Uri.parse(url);
@@ -104,17 +98,14 @@ public class PhotoViewActivity extends AppCompatActivity implements OnClickListe
         ImagePipeline imagePipeline = Fresco.getImagePipeline();
         DataSource<CloseableReference<CloseableImage>>
                 dataSource = imagePipeline.fetchDecodedImage(request, this);
-
         DataSubscriber dataSubscriber =
                 new BaseDataSubscriber<CloseableReference<CloseableStaticBitmap>>() {
                     @Override
                     public void onNewResultImpl(
                             DataSource<CloseableReference<CloseableStaticBitmap>> dataSource) {
-
                         if (!dataSource.isFinished()) {
 
                         }
-
                         CloseableReference<CloseableStaticBitmap> imageReference = dataSource.getResult();
                         if (imageReference != null) {
 
@@ -134,7 +125,6 @@ public class PhotoViewActivity extends AppCompatActivity implements OnClickListe
         dataSource.subscribe(dataSubscriber, Executors.newSingleThreadExecutor());
 
     }
-
     private  Handler myHandler = new Handler(){
         @Override
         public void handleMessage(Message msg){
@@ -148,13 +138,10 @@ public class PhotoViewActivity extends AppCompatActivity implements OnClickListe
             bitmap=image.getUnderlyingBitmap();
 
             imageView.setImageBitmap(bitmap);
-
-            mAttacher = new PhotoViewAttacher(imageView);
+             mAttacher = new PhotoViewAttacher(imageView);
             progressView.setVisibility(View.GONE);
             imageView.setVisibility(View.VISIBLE);
             imageView.invalidate();
-
-
             }
             break;
                 case 2:{
@@ -162,27 +149,17 @@ public class PhotoViewActivity extends AppCompatActivity implements OnClickListe
                             Toast.LENGTH_SHORT).show();
                 }
                 break;
-        }
-
+            }
         }
     };
-
-
-
-
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.savePhoto:
-
                 SavePhoto();
-
                 break;
-
         }
     }
-
-
     private void SavePhoto() {
         if (bitmap != null) {
             new Thread(new Runnable() {
@@ -192,33 +169,26 @@ public class PhotoViewActivity extends AppCompatActivity implements OnClickListe
                     if (!picFileDir.exists()) {
                         picFileDir.mkdir();
                     }
-
                     String photoName = ImageBuffer.convertUrlToFileName(url);
                     File file = new File(picFileDir + "/" + photoName);
                     try {
                         if (file.createNewFile()) {
-
                             OutputStream outStream = new FileOutputStream(file);
                             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream);
                             outStream.flush();
                             outStream.close();
-
                         }
                     } catch (FileNotFoundException e) {
 
                     } catch (IOException e) {
-                        Log.w("test----->", e.toString());
+
                     }
                     Message message = Message.obtain();
                     message.arg1 = 2;
                     myHandler.sendMessage(message);
-
                 }
             }).start();
-
-
         }
-
     }
     @Override
     protected void onDestroy() {
@@ -229,10 +199,7 @@ public class PhotoViewActivity extends AppCompatActivity implements OnClickListe
             imageReference.close();
         }
         image.close();
-
-
     }
-
 }
 
 

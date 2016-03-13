@@ -1,6 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+﻿
 <resources>
-
     <string name="app_name">APP_HMT</string>
     <string name="hello_world">Hello world!</string>
     <string name="查看評論">查看評論</string>
@@ -15,7 +14,7 @@
     <drawable name="clr_normal">@color/tab_blue</drawable>
     <drawable name="clr_pressed">@color/tab_blue</drawable>
     <drawable name="ll_pressed">@color/ll_pressed</drawable>
-
+    <drawable name="ll_notpressed">@color/ll_notpressed</drawable>
     <string name="title_activity_photo_view">PhotoViewActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
