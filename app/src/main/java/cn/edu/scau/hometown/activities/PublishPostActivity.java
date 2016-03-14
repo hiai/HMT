@@ -10,6 +10,7 @@ import android.widget.ImageView;
 
 import com.keyboard.EmoticonsKeyBoardPopWindow;
 import com.keyboard.view.EmoticonsEditText;
+import com.umeng.analytics.MobclickAgent;
 
 import cn.edu.scau.hometown.R;
 import cn.edu.scau.hometown.tools.EmoticonsUtils;
@@ -88,5 +89,16 @@ public class PublishPostActivity extends AppCompatActivity {
         //点击发表按钮触发
         this.finish();
     }
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart(this.getClass().getName());
+        MobclickAgent.onResume(this);
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(this.getClass().getName());
+        MobclickAgent.onPause(this);
+    }
 }

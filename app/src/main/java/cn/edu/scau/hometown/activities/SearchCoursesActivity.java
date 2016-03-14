@@ -24,6 +24,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -141,6 +142,8 @@ public class SearchCoursesActivity extends SwipeBackActivity implements SearchMe
      * 点击查课按钮后触发的事件
      */
     private void onClickSearchCourse() {
+        //统计查课次数
+        MobclickAgent.onEvent(this,"Event_QueryCourse");
         relativeLayout.setVisibility(View.GONE);
         btn_searchCourse.setEnabled(true);
         searchCourseByKeywordTask();
@@ -324,5 +327,18 @@ public class SearchCoursesActivity extends SwipeBackActivity implements SearchMe
         super.onDestroy();
         mRequestQueue.stop();
         mRequestQueue.cancelAll(true);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart(this.getClass().getName());
+        MobclickAgent.onResume(this);
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(this.getClass().getName());
+        MobclickAgent.onPause(this);
     }
 }

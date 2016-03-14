@@ -10,6 +10,8 @@ import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 
+import com.umeng.analytics.MobclickAgent;
+
 import java.io.File;
 
 import cn.edu.scau.hometown.R;
@@ -76,6 +78,17 @@ public class SplashActivity extends Activity {
                 android.R.anim.fade_out);
         finish();
     }
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart(this.getClass().getName());
+        MobclickAgent.onResume(this);
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(this.getClass().getName());
+        MobclickAgent.onPause(this);
+    }
 
 }

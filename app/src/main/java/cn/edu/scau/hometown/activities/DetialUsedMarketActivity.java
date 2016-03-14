@@ -14,6 +14,8 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.umeng.analytics.MobclickAgent;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -108,13 +110,13 @@ public class DetialUsedMarketActivity extends SwipeBackActivity {
     }
 
     private void setData(GoodsInfo data){
-        secondgoods_price.setText(data.getSecondgoods_price()+" ￥");
+        secondgoods_price.setText(data.getSecondgoods_price() + " ￥");
         secondgoods_hownew.setText(data.getSecondgoods_hownew());
         secondgoods_bewrite.setText(data.getSecondgoods_bewrite());
         secondgoods_delivertype.setText(data.getSecondgoods_delivertype());
         secondgoods_efficiency.setText(data.getSecondgoods_efficiency());
         secondgoods_paidtype.setText(data.getSecondgoods_paidtype());
-        secondgoods_goodsnums.setText(data.getSecondgoods_goodsnums()+"");
+        secondgoods_goodsnums.setText(data.getSecondgoods_goodsnums() + "");
         secondgoods_pastdate.setText(data.getSecondgoods_pastdate());
         secondgoods_tradetype.setText(data.getSecondgoods_tradetype());
     }
@@ -131,5 +133,17 @@ public class DetialUsedMarketActivity extends SwipeBackActivity {
         mSwipeBackLayout = getSwipeBackLayout();
         mSwipeBackLayout.setEdgeTrackingEnabled(SwipeBackLayout.EDGE_LEFT);
         mSwipeBackLayout.setScrimColor(Color.TRANSPARENT);
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart(this.getClass().getName());
+        MobclickAgent.onResume(this);
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(this.getClass().getName());
+        MobclickAgent.onPause(this);
     }
 }

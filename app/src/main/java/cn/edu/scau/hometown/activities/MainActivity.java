@@ -5,7 +5,8 @@ import android.app.DownloadManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Bundle;
+import android.os.*;
+import android.os.Process;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -24,6 +25,7 @@ import android.view.Menu;
 import android.widget.ImageView;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,13 +39,7 @@ import cn.edu.scau.hometown.fragment.PartitionFragment;
 import cn.edu.scau.hometown.fragment.SecondaryMarketFragment;
 
 import cn.edu.scau.hometown.tools.NewVersionUpdateUtil;
-import cn.edu.scau.hometown.view.CustomDialog;
-import rx.Observable;
-import rx.Observer;
-import rx.Scheduler;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+
 
 /**
  * Created by Administrator on 2015/7/26 0026.
@@ -93,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void InitToolBar() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("华农人的红满堂");
+        toolbar.setTitle("红满堂 有你更美好");
         toolbar.setBackgroundColor(getResources().getColor(R.color.tab_green));
         setSupportActionBar(toolbar);
 
@@ -190,11 +186,26 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
 
-                if (position == 0) snackBarBackGroupColor = "Tab_green";
-                else if (position == 1) snackBarBackGroupColor = "Tab_blue";
-                else if (position == 2) snackBarBackGroupColor = "Tab_purple";
-                else if (position == 3) snackBarBackGroupColor = "Tab_pink";
-                else if (position == 4) snackBarBackGroupColor = "Tab_brown";
+                if (position == 0) {
+                    snackBarBackGroupColor = "Tab_green";
+                    MobclickAgent.onEvent(MainActivity.this,"Page_SecondHand");
+                }
+
+                else if (position == 1) {
+                    snackBarBackGroupColor = "Tab_blue";
+                    MobclickAgent.onEvent(MainActivity.this,"Page_Recommend");
+                }
+                else if (position == 2){
+                    snackBarBackGroupColor = "Tab_purple";
+                    MobclickAgent.onEvent(MainActivity.this,"Page_Partition");
+                }
+                else if (position == 3){
+                    snackBarBackGroupColor = "Tab_pink";
+                    MobclickAgent.onEvent(MainActivity.this,"Page_Follow");
+                }
+                else if (position == 4){
+                    snackBarBackGroupColor = "Tab_brown";
+                }
 
             }
 
@@ -233,7 +244,9 @@ public class MainActivity extends AppCompatActivity {
                 sb.show();
                 firstTime = secondTime;
             } else {
-                finish();
+                MobclickAgent.onKillProcess(this);
+                android.os.Process.killProcess(Process.myPid());
+
             }
         }
     }
@@ -262,7 +275,16 @@ public class MainActivity extends AppCompatActivity {
 
         return true;
     }
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
 
 }
 

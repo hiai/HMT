@@ -18,6 +18,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 
@@ -66,7 +67,7 @@ public class PartitionFragment extends Fragment {
                 })
         );
 
-        floatingActionButton = (FloatingActionButton)view.findViewById(R.id.fab);
+        floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fab);
         floatingActionButton.attachToRecyclerView(rcv_partition);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,8 +107,6 @@ public class PartitionFragment extends Fragment {
         icon.add(R.drawable.partition_recruit);
 
 
-
-
         iconName = new ArrayList<>();
         iconName.add("职场交流");
         iconName.add("课程交流");
@@ -129,7 +128,6 @@ public class PartitionFragment extends Fragment {
         iconName.add("社团组织招新");
 
 
-
     }
 
 
@@ -146,22 +144,20 @@ public class PartitionFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(MyViewHolder holder, int position) {
-           holder.partition_tv.setText(iconName.get(position));
-           holder.partition_image.setImageDrawable(getResources().getDrawable(icon.get(position)));
-             holder.partition_tv.setText(iconName.get(position));
+            holder.partition_tv.setText(iconName.get(position));
+            holder.partition_image.setImageDrawable(getResources().getDrawable(icon.get(position)));
+            holder.partition_tv.setText(iconName.get(position));
 //            缩放并显示图片图片
-            uri =Uri.parse("res://cn.edu.scau.hometown/" + icon.get(position));
-              request = ImageRequestBuilder.newBuilderWithSource(uri)
+            uri = Uri.parse("res://cn.edu.scau.hometown/" + icon.get(position));
+            request = ImageRequestBuilder.newBuilderWithSource(uri)
                     .setResizeOptions(new ResizeOptions(imageWidth, imageHeight))
                     .build();
 
-            controller = (PipelineDraweeController)Fresco.newDraweeControllerBuilder()
+            controller = (PipelineDraweeController) Fresco.newDraweeControllerBuilder()
                     .setOldController(holder.partition_image.getController())
                     .setImageRequest(request)
                     .build();
-             holder.partition_image.setController(controller);
-
-
+            holder.partition_image.setController(controller);
 
 
         }
@@ -183,18 +179,30 @@ public class PartitionFragment extends Fragment {
             }
         }
 
-        private void CalculationView(MyViewHolder holder){
+        private void CalculationView(MyViewHolder holder) {
 
-            int width =View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED);
+            int width = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
 
-            int height =View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED);
+            int height = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
 
-            holder.partition_image.measure(width,height);
+            holder.partition_image.measure(width, height);
 
 
-            imageWidth= holder.partition_image.getMeasuredHeight();
-            imageHeight=holder.partition_image.getMeasuredWidth();
+            imageWidth = holder.partition_image.getMeasuredHeight();
+            imageHeight = holder.partition_image.getMeasuredWidth();
 
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart(this.getClass().getName());
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(this.getClass().getName());
     }
 }

@@ -10,6 +10,8 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 
+import com.umeng.analytics.MobclickAgent;
+
 import cn.edu.scau.hometown.R;
 import cn.edu.scau.hometown.tools.NewVersionUpdateUtil;
 /*
@@ -119,6 +121,18 @@ private void initToolbar(){
          NewVersionUpdateUtil.unregisterReceiver(this);
          super.onDestroy();
 
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart(this.getClass().getName());
+        MobclickAgent.onResume(this);
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(this.getClass().getName());
+        MobclickAgent.onPause(this);
     }
 }
 

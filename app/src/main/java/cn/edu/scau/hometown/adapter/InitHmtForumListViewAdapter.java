@@ -89,9 +89,11 @@ public class InitHmtForumListViewAdapter extends RecyclerView.Adapter<InitHmtFor
 
     @Override
     public int getItemCount() {
-        return Integer.valueOf(hmtForumPostList.getThreads().size());
+        if (hmtForumPostList != null) {
+            return hmtForumPostList.getThreads().size();
+        }else
+            return 0;
     }
-
     /**
      * 对【本帖最后由[\s\S]+编辑】这种内容进行标记
      *

@@ -10,6 +10,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
+import com.umeng.analytics.MobclickAgent;
 
 import cn.edu.scau.hometown.bean.HmtUserBasedInfo;
 import cn.edu.scau.hometown.tools.DataUtil;
@@ -48,6 +49,9 @@ public class MyApplication extends Application {
         setHmtUserBasedInfo((HmtUserBasedInfo) DataUtil.getObject("登陆数据", this));
          refWatcher = LeakCanary.install(this);
         instance = this;
+        MobclickAgent.openActivityDurationTrack(false);
+        MobclickAgent.setDebugMode( true );
+
     }
 
 

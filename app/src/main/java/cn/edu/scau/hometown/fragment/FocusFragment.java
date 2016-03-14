@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import com.keyboard.EmoticonsKeyBoardPopWindow;
 import com.keyboard.view.EmoticonsEditText;
+import com.umeng.analytics.MobclickAgent;
 
 import cn.edu.scau.hometown.R;
 import cn.edu.scau.hometown.tools.EmoticonsUtils;
@@ -34,9 +35,17 @@ public class FocusFragment extends Fragment {
     }
 
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart(this.getClass().getName());
+    }
 
-
-
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(this.getClass().getName());
+    }
 
 
 }

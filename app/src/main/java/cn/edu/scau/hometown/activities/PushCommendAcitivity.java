@@ -16,6 +16,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.umeng.analytics.MobclickAgent;
+
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -218,6 +220,17 @@ public class PushCommendAcitivity extends AppCompatActivity implements View.OnCl
         }
         return super.onOptionsItemSelected(item);
     }
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart(this.getClass().getName());
+        MobclickAgent.onResume(this);
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(this.getClass().getName());
+        MobclickAgent.onPause(this);
+    }
 
 }

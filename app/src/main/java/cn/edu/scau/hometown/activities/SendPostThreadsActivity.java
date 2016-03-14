@@ -22,6 +22,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.keyboard.EmoticonsKeyBoardPopWindow;
 import com.keyboard.view.EmoticonsEditText;
+import com.umeng.analytics.MobclickAgent;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -187,5 +188,18 @@ public class SendPostThreadsActivity extends AppCompatActivity {
         };
 
         requestQueue.add(stringRequest);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart(this.getClass().getName());
+        MobclickAgent.onResume(this);
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(this.getClass().getName());
+        MobclickAgent.onPause(this);
     }
 }
