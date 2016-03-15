@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 
 import com.android.volley.RequestQueue;
@@ -40,6 +41,8 @@ import cn.edu.scau.hometown.bean.HmtForumPostList;
 import cn.edu.scau.hometown.listener.RecyclerItemClickListener;
 import cn.edu.scau.hometown.tools.HttpUtil;
 import cn.edu.scau.hometown.view.HeartView.HeartView;
+import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
+import jp.wasabeef.recyclerview.adapters.SlideInBottomAnimationAdapter;
 
 /**
  * Created by Administrator on 2015/10/4 0004.
@@ -263,7 +266,9 @@ public class HmtPartitionActivity extends AppCompatActivity {
         intent.putExtra("hmtForumPostContent", hmtForumPostContent);
         intent.putExtra("tid", tid);
         //统计各板块帖子浏览量
-        MobclickAgent.onEvent(this,map.get(title));
+        Map<String,String>  Section=new HashMap<>(1);
+        Section.put("板块",title);
+        MobclickAgent.onEvent(this,"Section",Section);
         mSwipeRefreshWidget.setRefreshing(false);
         startActivity(intent);
     }
@@ -283,7 +288,14 @@ public class HmtPartitionActivity extends AppCompatActivity {
         rcv_hmt_forum = (RecyclerView) findViewById(R.id.rcv_detail_partition);
         rcv_hmt_forum.setLayoutManager(linearLayoutManager);
         initHmtForumListViewAdapter = new InitHmtForumListViewAdapter(hmtForumPostList, getApplication());
-        rcv_hmt_forum.setAdapter(initHmtForumListViewAdapter);
+
+        ScaleInAnimationAdapter scaleInAdapter = new ScaleInAnimationAdapter(initHmtForumListViewAdapter);
+        SlideInBottomAnimationAdapter slideInAdapter = new SlideInBottomAnimationAdapter(scaleInAdapter);
+        slideInAdapter.setDuration(300);
+        slideInAdapter.setInterpolator(new OvershootInterpolator());
+
+
+        rcv_hmt_forum.setAdapter(slideInAdapter);
         rcv_hmt_forum.addOnItemTouchListener(
                 new RecyclerItemClickListener(this, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override

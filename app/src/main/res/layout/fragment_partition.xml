@@ -4,25 +4,16 @@
     xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="fill_parent"
-    xmlns:app="http://schemas.android.com/tools"
     android:background="@color/white"
-    android:orientation="vertical">
-
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:background="@color/tab_purple"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:fitsSystemWindows="true"
-        android:minHeight="?attr/actionBarSize"
-        app:layout_scrollFlags="scroll"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+    android:orientation="vertical"
+    android:paddingLeft="8dp">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rcv_partition"
         android:background="@color/white"
         android:layout_width="match_parent"
-        android:layout_height="fill_parent" />
+        android:layout_height="fill_parent"
+        android:fitsSystemWindows="true"/>
 
     <fab.FloatingActionButton
         android:id="@+id/fab"

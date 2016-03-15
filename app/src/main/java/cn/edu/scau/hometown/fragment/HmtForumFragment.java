@@ -14,6 +14,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -45,6 +46,8 @@ import cn.edu.scau.hometown.bean.HmtForumPostList;
 import cn.edu.scau.hometown.bean.ImagesGuideToThreads;
 import cn.edu.scau.hometown.listener.RecyclerItemClickListener;
 import cn.edu.scau.hometown.tools.HttpUtil;
+import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
+import jp.wasabeef.recyclerview.adapters.SlideInBottomAnimationAdapter;
 
 
 /**
@@ -133,7 +136,7 @@ public class HmtForumFragment extends Fragment {
 
                     if (!isClick) {
                         HashMap<String,String> map = new HashMap<String,String>();
-                        map.put("page",String.valueOf(index));
+                        map.put("page",String.valueOf(index+1));
                         MobclickAgent.onEvent(HmtForumFragment.this.getActivity(), "lunbotu", map);
                         VolleyRequestString(HttpUtil.GET_HMT_FORUM_POSTS_CONTENT_BY_TID + tid, 2);
                     }
@@ -157,7 +160,14 @@ public class HmtForumFragment extends Fragment {
         rcv_hmt_forum = (RecyclerView) view.findViewById(R.id.lv_hmt_forum);
         rcv_hmt_forum.setLayoutManager(new LinearLayoutManager(getActivity()));
         initHmtForumListViewAdapter = new InitHmtForumListViewAdapter(hmtForumPostList, getActivity());
-        rcv_hmt_forum.setAdapter(initHmtForumListViewAdapter);
+
+        ScaleInAnimationAdapter scaleInAdapter = new ScaleInAnimationAdapter(initHmtForumListViewAdapter);
+        SlideInBottomAnimationAdapter slideInAdapter = new SlideInBottomAnimationAdapter(scaleInAdapter);
+        slideInAdapter.setDuration(300);
+        slideInAdapter.setInterpolator(new OvershootInterpolator());
+
+
+        rcv_hmt_forum.setAdapter(slideInAdapter);
         rcv_hmt_forum.addOnItemTouchListener(
                 new RecyclerItemClickListener(getActivity(), new RecyclerItemClickListener.OnItemClickListener() {
                     @Override

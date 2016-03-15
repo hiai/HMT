@@ -7,15 +7,10 @@ import android.net.NetworkInfo;
 import android.widget.ImageView;
 
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
+
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
 
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -24,8 +19,12 @@ import java.util.Enumeration;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 public class HttpUtil {
-    public static HttpClient httpClient = new DefaultHttpClient();
+    public static OkHttpClient client = new OkHttpClient();
     public static final String BASE_URL_KEY_WORD = "http://hometown.scau.edu.cn/course/index.php?s=/Api&keyword=";
     public static final String BASE_URL_COURSE_ID = "http://hometown.scau.edu.cn/course/index.php?s=/Api&course=";
     public static final String GET_HMT_USER_BASE_INFORMATION_URL_BY_USER_ID = "http://hometown.scau.edu.cn/bbs/plugin.php?id=iltc_open:userinfo&uid=";
@@ -51,28 +50,16 @@ public class HttpUtil {
      */
     public static String getRequest(final String url) throws Exception {
 
-        FutureTask<String> task = new FutureTask<String>(
-                new Callable<String>() {
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+        Response response = client.newCall(request).execute();
+        if(response.isSuccessful()){
 
-                    @Override
-                    public String call() throws Exception {
+            return response.body().string();
+        }
 
-                        HttpGet get = new HttpGet(url);
-                        HttpResponse httpResponse = httpClient.execute(get);
-                        if (httpResponse.getStatusLine().getStatusCode() == 200) {
-
-                            String result = EntityUtils.toString(httpResponse
-                                    .getEntity());
-                            return result;
-                        }
-                        return null;
-
-                    }
-
-                });
-
-        new Thread(task).start();
-        return task.get();
+        return null;
 
     }
 
@@ -126,7 +113,7 @@ public class HttpUtil {
 
     public static  void setUserIconTask(RequestQueue requestQueue,String url, final ImageView imageView) {
 
-        ImageRequest imageRequest = new ImageRequest(url, new Response.Listener<Bitmap>() {
+        ImageRequest imageRequest = new ImageRequest(url, new com.android.volley.Response.Listener<Bitmap>() {
             @Override
             public void onResponse(Bitmap response) {
                 imageView.setImageBitmap(response);
@@ -134,7 +121,7 @@ public class HttpUtil {
 
             }
         }, 300, 200, Bitmap.Config.ARGB_4444,
-                new Response.ErrorListener() {
+                new com.android.volley.Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
 

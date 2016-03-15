@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.OvershootInterpolator;
 import android.widget.TextView;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -27,6 +28,8 @@ import cn.edu.scau.hometown.activities.HmtPartitionActivity;
 import cn.edu.scau.hometown.activities.PublishPostActivity;
 import cn.edu.scau.hometown.listener.RecyclerItemClickListener;
 import fab.FloatingActionButton;
+import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
+import jp.wasabeef.recyclerview.adapters.SlideInBottomAnimationAdapter;
 
 /**
  * Created by Administrator on 2015/10/3 0003.
@@ -52,9 +55,14 @@ public class PartitionFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_partition, null);
         rcv_partition = (RecyclerView) view.findViewById(R.id.rcv_partition);
-        rcv_partition.setLayoutManager(new GridLayoutManager(getActivity(), 3));
+        rcv_partition.setLayoutManager(new GridLayoutManager(getActivity(), 4));
 
-        rcv_partition.setAdapter(new PartitionAdapter());
+        ScaleInAnimationAdapter scaleInAdapter = new ScaleInAnimationAdapter(new PartitionAdapter());
+        SlideInBottomAnimationAdapter slideInAdapter = new SlideInBottomAnimationAdapter(scaleInAdapter);
+        slideInAdapter.setDuration(300);
+        slideInAdapter.setInterpolator(new OvershootInterpolator());
+
+        rcv_partition.setAdapter(slideInAdapter);
         rcv_partition.addOnItemTouchListener(
                 new RecyclerItemClickListener(getActivity(), new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
@@ -144,7 +152,6 @@ public class PartitionFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(MyViewHolder holder, int position) {
-            holder.partition_tv.setText(iconName.get(position));
             holder.partition_image.setImageDrawable(getResources().getDrawable(icon.get(position)));
             holder.partition_tv.setText(iconName.get(position));
 //            缩放并显示图片图片

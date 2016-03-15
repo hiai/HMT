@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.animation.OvershootInterpolator;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,6 +29,8 @@ import cn.edu.scau.hometown.R;
 import cn.edu.scau.hometown.adapter.InitDetailHmtForumListViewAdapter;
 import cn.edu.scau.hometown.bean.HmtForumPostContent;
 import cn.edu.scau.hometown.tools.HttpUtil;
+import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
+import jp.wasabeef.recyclerview.adapters.SlideInBottomAnimationAdapter;
 import me.imid.swipebacklayout.lib.SwipeBackLayout;
 import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 
@@ -101,7 +104,15 @@ public class DetialHmtPostThreadsActivity extends SwipeBackActivity implements V
 
         lv_detail_post_threads.setLayoutManager(linearLayoutManager);
         adapter = new InitDetailHmtForumListViewAdapter(this, hmtForumPostContent, tid);
-        lv_detail_post_threads.setAdapter(adapter);
+
+        ScaleInAnimationAdapter scaleInAdapter = new ScaleInAnimationAdapter(adapter);
+        SlideInBottomAnimationAdapter slideInAdapter = new SlideInBottomAnimationAdapter(scaleInAdapter);
+        slideInAdapter.setDuration(300);
+        slideInAdapter.setInterpolator(new OvershootInterpolator());
+
+
+
+        lv_detail_post_threads.setAdapter(slideInAdapter);
 
         mSwipeRefreshWidget.setRefreshing(false);
 
