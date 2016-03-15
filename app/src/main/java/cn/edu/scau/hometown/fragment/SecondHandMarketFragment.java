@@ -61,35 +61,34 @@ public class SecondHandMarketFragment extends Fragment implements View.OnClickLi
     private SwipeRefreshLayout mSwipeRefreshWidget;
     private RequestQueue requestQueue;
     private RecyclerView recyclerView;
-    private RecyclerViewHeader recyclerViewHeader;
     private List<SecondHandMarketHomeBean.GoodsEntity> datas;
     private SecondHandMarketHomeAdapter secondHandMarketHomeAdapter;
     private View view;
-    private Button digital, parttime, daily, bike, house, book,login;
+    private Button digital, parttime, daily, bike, house, book,login,more;
     private RadioGroup radioGroup;
     private MyHandler handler;
     private Message msg;
     private SecondHandMarketPicBean secondHandMarketPicBean;
-    private TextView more;
     private LinearLayout linearLayout;
-
+    private  View headView,footView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestQueue = Volley.newRequestQueue(getActivity());
         handler = new MyHandler();
+
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_second_hand_market, container, false);
+        headView = inflater.inflate(R.layout.recycler_headview,container,false);
+        footView = inflater.inflate(R.layout.recycler_footview,container, false);
         initViews();
         getJsonData(HttpUtil.GET_SECOND_MARKET_GOOD_PIC, "homePic");
         getJsonData(HttpUtil.GET_SECOND_MARKET_DATA, "homeData");
-
-
         return view;
     }
 
@@ -101,13 +100,13 @@ public class SecondHandMarketFragment extends Fragment implements View.OnClickLi
         mSwipeRefreshWidget.setProgressViewOffset(false, 0, (int) TypedValue
                 .applyDimension(TypedValue.COMPLEX_UNIT_DIP, 60, getResources()
                         .getDisplayMetrics()));
-        digital = (Button) view.findViewById(R.id.digital_sale);
-        parttime = (Button) view.findViewById(R.id.find_parttime);
-        daily = (Button) view.findViewById(R.id.daily_supplies);
-        bike = (Button) view.findViewById(R.id.bike_specialsale);
-        house = (Button) view.findViewById(R.id.house_renting);
-        book = (Button) view.findViewById(R.id.book_sale);
-        more = (TextView) view.findViewById(R.id.more_goods);
+        digital = (Button) headView.findViewById(R.id.digital_sale);
+        parttime = (Button) headView.findViewById(R.id.find_parttime);
+        daily = (Button) headView.findViewById(R.id.daily_supplies);
+        bike = (Button) headView.findViewById(R.id.bike_specialsale);
+        house = (Button) headView.findViewById(R.id.house_renting);
+        book = (Button) headView.findViewById(R.id.book_sale);
+        more = (Button) footView.findViewById(R.id.more_goods);
         login = (Button) view.findViewById(R.id.login);
         linearLayout = (LinearLayout) view.findViewById(R.id.market_searchbar);
 
@@ -121,7 +120,7 @@ public class SecondHandMarketFragment extends Fragment implements View.OnClickLi
         login.setOnClickListener(this);
         linearLayout.setOnClickListener(this);
 
-        radioGroup = (RadioGroup) view.findViewById(R.id.radiogroup);
+        radioGroup = (RadioGroup) headView.findViewById(R.id.radiogroup);
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
@@ -138,8 +137,7 @@ public class SecondHandMarketFragment extends Fragment implements View.OnClickLi
 
         recyclerView = (RecyclerView) view.findViewById(R.id.second_home_goods_recycle);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerViewHeader = (RecyclerViewHeader) view.findViewById(R.id.header);
-        recyclerViewHeader.attachTo(recyclerView, true);
+
     }
 
     @Override
@@ -184,7 +182,7 @@ public class SecondHandMarketFragment extends Fragment implements View.OnClickLi
                 .cacheInMemory(true)
                 .bitmapConfig(Bitmap.Config.RGB_565)
                 .build();
-        BGABanner banner = (BGABanner) view.findViewById(R.id.banner_splash_pager);
+        BGABanner banner = (BGABanner) headView.findViewById(R.id.banner_splash_pager);
         banner.setTransitionEffect(BGABanner.TransitionEffect.Default);
         banner.setPageChangeDuration(1000);
         List<View> views = new ArrayList<>();
@@ -226,11 +224,14 @@ public class SecondHandMarketFragment extends Fragment implements View.OnClickLi
 
                     datas = (List<SecondHandMarketHomeBean.GoodsEntity>) msg.obj;
                     secondHandMarketHomeAdapter = new SecondHandMarketHomeAdapter(datas);
+                    secondHandMarketHomeAdapter.setHeadView(headView);
+                    secondHandMarketHomeAdapter.setFootView(footView);
+
                     recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), new RecyclerItemClickListener.OnItemClickListener() {
                         @Override
                         public void onItemClick(View view, int position) {
-
-                            getJsonData(HttpUtil.GET_SECOND_MARKET_GOOD_BY_GID + datas.get(position).getSecondgoods_id(), "detailData");
+                            if(position!=0&&position!=datas.size()+1)
+                                getJsonData(HttpUtil.GET_SECOND_MARKET_GOOD_BY_GID + datas.get(position - 1).getSecondgoods_id(), "detailData");
                         }
                     }));
                     recyclerView.setAdapter(secondHandMarketHomeAdapter);

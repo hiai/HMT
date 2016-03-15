@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <cn.bingoogolapple.bgabanner.BGABanner xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/banner_splash_pager"
+        android:layout_width="match_parent"
+        android:layout_height="130dp"
+        android:visibility="gone"
+        app:banner_pointAutoPlayAble="true"
+        app:banner_pointGravity="center_horizontal"
+        app:banner_pointTopBottomMargin="15dp" />
+
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#fff"
+        android:columnCount="3"
+        android:orientation="horizontal"
+        android:rowCount="2">
+
+        <Button
+            android:id="@+id/digital_sale"
+            android:layout_width="70dp"
+            android:layout_height="90dp"
+            android:layout_marginLeft="40dp"
+            android:background="@color/white"
+            android:drawableTop="@drawable/digital_sale"
+            android:text="数码类"
+            android:textColor="#336699" />
+
+        <Button
+            android:id="@+id/find_parttime"
+            android:layout_width="70dp"
+            android:layout_height="90dp"
+            android:layout_marginLeft="40dp"
+            android:background="@color/white"
+            android:drawableTop="@drawable/find_parttime"
+            android:text="招聘兼职"
+            android:textColor="#cc6633" />
+
+        <Button
+            android:id="@+id/daily_supplies"
+            android:layout_width="70dp"
+            android:layout_height="90dp"
+            android:layout_marginLeft="40dp"
+            android:background="@color/white"
+            android:drawableTop="@drawable/daily_supplies"
+            android:text="日常用品"
+            android:textColor="#cccc00" />
+
+        <Button
+            android:id="@+id/bike_specialsale"
+            android:layout_width="70dp"
+            android:layout_height="90dp"
+            android:layout_marginLeft="40dp"
+            android:background="@color/white"
+            android:drawableTop="@drawable/bike_specialsale"
+            android:text="单车特卖区"
+            android:textColor="#666600" />
+
+        <Button
+            android:id="@+id/house_renting"
+            android:layout_width="70dp"
+            android:layout_height="90dp"
+            android:layout_marginLeft="40dp"
+            android:background="@color/white"
+            android:drawableTop="@drawable/house_renting"
+            android:text="房屋租赁"
+            android:textColor="#663399" />
+
+        <Button
+            android:id="@+id/book_sale"
+            android:layout_width="70dp"
+            android:layout_height="90dp"
+            android:layout_marginLeft="40dp"
+            android:background="@color/white"
+            android:drawableTop="@drawable/book_sale"
+            android:text="书摊"
+            android:textColor="#cc3333" />
+    </GridLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RadioGroup
+            android:id="@+id/radiogroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/sale"
+                style="@style/radiobuttonstyle2"
+                android:background="@drawable/radio_button_selector"
+                android:checked="true"
+                android:text="出售"
+                android:textColor="@color/text_color_selector" />
+
+            <RadioButton
+                android:id="@+id/buy"
+                style="@style/radiobuttonstyle2"
+                android:background="@drawable/radio_button_selector"
+                android:text="收购"
+                android:textColor="@color/text_color_selector" />
+        </RadioGroup>
+
+
+    </RelativeLayout>
+</LinearLayout>
