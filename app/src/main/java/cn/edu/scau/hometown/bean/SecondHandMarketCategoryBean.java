@@ -8,20 +8,10 @@ import java.util.List;
  */
 public class SecondHandMarketCategoryBean implements Serializable {
 
-    private String page;
+
     private List<GoodsEntity> goods;
 
-    public void setPage(String page) {
-        this.page = page;
-    }
 
-    public void setGoods(List<GoodsEntity> goods) {
-        this.goods = goods;
-    }
-
-    public String getPage() {
-        return page;
-    }
 
     public List<GoodsEntity> getGoods() {
         return goods;
@@ -47,6 +37,7 @@ public class SecondHandMarketCategoryBean implements Serializable {
         private String secondgoods_postdate;
         private String secondgoods_pastdate;
         private String  secondgoods_picture;
+        private String secondgoods_efficiency;
 
         public void setSecondgoods_id(String secondgoods_id) {
             this.secondgoods_id = secondgoods_id;
@@ -112,6 +103,14 @@ public class SecondHandMarketCategoryBean implements Serializable {
 
         public void setSecondgoods_picture(String secondgoods_picture) {
             this.secondgoods_picture = secondgoods_picture;
+        }
+
+        public String getSecondgoods_efficiency() {
+            return secondgoods_efficiency;
+        }
+
+        public void setSecondgoods_efficiency(String secondgoods_efficiency) {
+            this.secondgoods_efficiency = secondgoods_efficiency;
         }
     }
 }

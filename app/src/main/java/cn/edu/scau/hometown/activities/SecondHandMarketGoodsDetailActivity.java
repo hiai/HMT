@@ -4,6 +4,7 @@ package cn.edu.scau.hometown.activities;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 
 import android.util.Log;
@@ -33,7 +34,7 @@ public class SecondHandMarketGoodsDetailActivity extends ActionBarActivity imple
     private GoodsDetailCommentFragment goodsDetailCommentFragment;
     private TextView name,price,view,state;
     private SecondHandMarketGoodsDetailBean secondHandMarketGoodsDetailBean;
-
+    private ImageView iv_back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +57,8 @@ public class SecondHandMarketGoodsDetailActivity extends ActionBarActivity imple
         price = (TextView) findViewById(R.id.goods_price);
         view = (TextView) findViewById(R.id.goods_view);
         state = (TextView) findViewById(R.id.goods_state);
+        iv_back = (ImageView) findViewById(R.id.back);
+        iv_back.setOnClickListener(this);
     }
     private void initGoodsData() {
         name.setText(secondHandMarketGoodsDetailBean.getSecondgoods_name());
@@ -89,6 +92,8 @@ public class SecondHandMarketGoodsDetailActivity extends ActionBarActivity imple
                 goodsDetailCommentFragment = new GoodsDetailCommentFragment();
                 getFragmentManager().beginTransaction().replace(R.id.f_container,goodsDetailCommentFragment).commit();
                 break;
+            case R.id.back:
+                SecondHandMarketGoodsDetailActivity.this.finish();
         }
     }
 

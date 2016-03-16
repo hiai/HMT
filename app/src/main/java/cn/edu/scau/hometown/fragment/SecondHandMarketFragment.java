@@ -20,14 +20,11 @@ import android.widget.ImageView;
 import android.os.Handler;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
-import android.widget.TextView;
-
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.bartoszlipinski.recyclerviewheader.RecyclerViewHeader;
 import com.google.gson.Gson;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
@@ -66,8 +63,6 @@ public class SecondHandMarketFragment extends Fragment implements View.OnClickLi
     private View view;
     private Button digital, parttime, daily, bike, house, book,login,more;
     private RadioGroup radioGroup;
-    private MyHandler handler;
-    private Message msg;
     private SecondHandMarketPicBean secondHandMarketPicBean;
     private LinearLayout linearLayout;
     private  View headView,footView;
@@ -76,7 +71,7 @@ public class SecondHandMarketFragment extends Fragment implements View.OnClickLi
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestQueue = Volley.newRequestQueue(getActivity());
-        handler = new MyHandler();
+
 
     }
 
@@ -215,39 +210,7 @@ public class SecondHandMarketFragment extends Fragment implements View.OnClickLi
     }
 
 
-    class MyHandler extends Handler {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what) {
-                case 1:
 
-                    datas = (List<SecondHandMarketHomeBean.GoodsEntity>) msg.obj;
-                    secondHandMarketHomeAdapter = new SecondHandMarketHomeAdapter(datas);
-                    secondHandMarketHomeAdapter.setHeadView(headView);
-                    secondHandMarketHomeAdapter.setFootView(footView);
-
-                    recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), new RecyclerItemClickListener.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(View view, int position) {
-                            if(position!=0&&position!=datas.size()+1)
-                                getJsonData(HttpUtil.GET_SECOND_MARKET_GOOD_BY_GID + datas.get(position - 1).getSecondgoods_id(), "detailData");
-                        }
-                    }));
-                    recyclerView.setAdapter(secondHandMarketHomeAdapter);
-                    mSwipeRefreshWidget.setRefreshing(false);
-                    break;
-                case 2:
-                    datas.clear();
-                    datas.addAll((Collection<? extends SecondHandMarketHomeBean.GoodsEntity>) msg.obj);
-                    secondHandMarketHomeAdapter.notifyDataSetChanged();
-                    mSwipeRefreshWidget.setRefreshing(false);
-                    break;
-            }
-
-
-        }
-    }
 
     /**
      * 得到json
@@ -261,19 +224,28 @@ public class SecondHandMarketFragment extends Fragment implements View.OnClickLi
             public void onResponse(String json) {
                 switch (type) {
                     case "homeData":
-                        Log.i("test","time");
-                        msg = handler.obtainMessage();
                         secondHandMarketHomeBean = parseJsonData(json, SecondHandMarketHomeBean.class);
-                        msg.obj = secondHandMarketHomeBean.getGoods();
-                        msg.what =1;
-                        handler.sendMessage(msg);
+                        datas = secondHandMarketHomeBean.getGoods();
+                        secondHandMarketHomeAdapter = new SecondHandMarketHomeAdapter(datas);
+                        secondHandMarketHomeAdapter.setHeadView(headView);
+                        secondHandMarketHomeAdapter.setFootView(footView);
+
+                        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), new RecyclerItemClickListener.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(View view, int position) {
+                                if(position!=0&&position!=datas.size()+1)
+                                    getJsonData(HttpUtil.GET_SECOND_MARKET_GOOD_BY_GID + datas.get(position - 1).getSecondgoods_id(), "detailData");
+                            }
+                        }));
+                        recyclerView.setAdapter(secondHandMarketHomeAdapter);
+                        mSwipeRefreshWidget.setRefreshing(false);
                         break;
                     case "homeDataClicked":
-                        msg = handler.obtainMessage();
                         secondHandMarketHomeBean = parseJsonData(json, SecondHandMarketHomeBean.class);
-                        msg.obj = secondHandMarketHomeBean.getGoods();
-                        msg.what =2;
-                        handler.sendMessage(msg);
+                        datas.clear();
+                        datas.addAll(secondHandMarketHomeBean.getGoods());
+                        secondHandMarketHomeAdapter.notifyDataSetChanged();
+                        mSwipeRefreshWidget.setRefreshing(false);
                         break;
                     case "detailData":
                         secondHandMarketGoodsDetailBean = parseJsonData(json, SecondHandMarketGoodsDetailBean.class);
@@ -281,6 +253,7 @@ public class SecondHandMarketFragment extends Fragment implements View.OnClickLi
                         intent.putExtra("secondHandMarketGoodsDetailBean", secondHandMarketGoodsDetailBean);
                         mSwipeRefreshWidget.setRefreshing(false);
                         startActivity(intent);
+                        mSwipeRefreshWidget.setRefreshing(false);
                         break;
                     case "homePic":
                         secondHandMarketPicBean = parseJsonData(json,SecondHandMarketPicBean.class);

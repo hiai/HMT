@@ -42,8 +42,7 @@ public class SecondHandMarketMoreGoodsActivity extends ActionBarActivity {
     private RequestQueue requestQueue;
     private RecyclerView recyclerView;
     private List<SecondHandMarketCategoryBean.GoodsEntity> datas;
-    private MyHandler handler;
-    private Message msg;
+
     private SecondHandMarketCategoryBean secondHandMarketCategoryBean;
     private SecondHandMarketCategoryAdapter secondHandMarketCategoryAdapter;
     private SecondHandMarketGoodsDetailBean secondHandMarketGoodsDetailBean;
@@ -59,10 +58,10 @@ public class SecondHandMarketMoreGoodsActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_second_hand_market_more_goods);
 
-        handler = new MyHandler();
+
         requestQueue = Volley.newRequestQueue(SecondHandMarketMoreGoodsActivity.this);
         initViews();
-        getJsonData(HttpUtil.GET_SECOND_MARKET_GOOD_SALE_PAGE + page+ "?limit="+ 3, "homeData");
+        getJsonData(HttpUtil.GET_SECOND_MARKET_GOOD_SALE_PAGE + page + "?limit=" + 3, "homeData");
 
     }
 
@@ -77,7 +76,6 @@ public class SecondHandMarketMoreGoodsActivity extends ActionBarActivity {
         recyclerView.setLayoutManager(linearLayoutManager);
 
 
-
         radioGroup = (RadioGroup) findViewById(R.id.radiogroup);
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -87,87 +85,18 @@ public class SecondHandMarketMoreGoodsActivity extends ActionBarActivity {
                     case R.id.sale:
                         flag = 1;
                         pageEnd = false;
-                        getJsonData(HttpUtil.GET_SECOND_MARKET_GOOD_SALE_PAGE + page+ "?limit="+ 3, "homeDataClicked");
+                        getJsonData(HttpUtil.GET_SECOND_MARKET_GOOD_SALE_PAGE + page + "?limit=" + 3, "homeDataClicked");
                         break;
                     case R.id.buy:
                         flag = 2;
                         pageEnd = false;
-                        getJsonData(HttpUtil.GET_SECOND_MARKET_GOOD_PURCHASE_PAGE + page+ "?limit="+ 3, "homeDataClicked");
+                        getJsonData(HttpUtil.GET_SECOND_MARKET_GOOD_PURCHASE_PAGE + page + "?limit=" + 3, "homeDataClicked");
                         break;
                 }
             }
         });
     }
 
-
-    class MyHandler extends Handler {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what) {
-                case 1:
-                   addPage();
-                    datas = (List<SecondHandMarketCategoryBean.GoodsEntity>) msg.obj;
-                    secondHandMarketCategoryAdapter = new SecondHandMarketCategoryAdapter(datas);
-                    recyclerView.setAdapter(secondHandMarketCategoryAdapter);
-                    recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(SecondHandMarketMoreGoodsActivity.this, new RecyclerItemClickListener.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(View view, int position) {
-                            getJsonData(HttpUtil.GET_SECOND_MARKET_GOOD_BY_GID + datas.get(position).getSecondgoods_id(), "detailData");
-                        }
-                    }));
-                    mSwipeRefreshWidget.setRefreshing(false);
-
-                    recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
-                        @Override
-                        public void onScrollStateChanged(RecyclerView recyclerView,
-                                                         int newState) {
-                            super.onScrollStateChanged(recyclerView, newState);
-                            if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                                int lastVisibleItem = linearLayoutManager.findLastCompletelyVisibleItemPosition();
-                                Log.i("item", String.valueOf(lastVisibleItem));
-                                if(lastVisibleItem +1== secondHandMarketCategoryAdapter.getItemCount()) {
-                                    mSwipeRefreshWidget.setRefreshing(true);
-                                   if(pageEnd==false) {
-                                       if (flag == 1) {
-                                           Log.i("page", String.valueOf(page));
-                                           getJsonData(HttpUtil.GET_SECOND_MARKET_GOOD_SALE_PAGE + page+ "?limit="+ 3, "homeDataMore");
-
-                                       } else {
-                                           Log.i("page", String.valueOf(page));
-                                           getJsonData(HttpUtil.GET_SECOND_MARKET_GOOD_PURCHASE_PAGE + page+ "?limit="+ 3, "homeDataMore");
-                                       }
-                                   }
-                                    else{
-                                       Toast.makeText(getApplicationContext(),"到底了",Toast.LENGTH_SHORT).show();
-                                   }
-
-                                    mSwipeRefreshWidget.setRefreshing(false);
-                                }
-                            }
-                        }
-
-                    });
-                    break;
-                case 2:
-                    addPage();
-                    datas.clear();
-                    datas.addAll((Collection<? extends SecondHandMarketCategoryBean.GoodsEntity>) msg.obj);
-                    secondHandMarketCategoryAdapter.notifyDataSetChanged();
-                    mSwipeRefreshWidget.setRefreshing(false);
-                    break;
-                case 3:
-                    addPage();
-                    datas.addAll((List<SecondHandMarketCategoryBean.GoodsEntity>) msg.obj);
-                    secondHandMarketCategoryAdapter.notifyDataSetChanged();
-                    mSwipeRefreshWidget.setRefreshing(false);
-                    break;
-
-            }
-
-
-        }
-    }
 
     /**
      * 得到json
@@ -181,37 +110,77 @@ public class SecondHandMarketMoreGoodsActivity extends ActionBarActivity {
             public void onResponse(String json) {
                 switch (type) {
                     case "homeData":
-                        msg = handler.obtainMessage();
+                        addPage();
                         secondHandMarketCategoryBean = parseJsonData(json, SecondHandMarketCategoryBean.class);
-                        msg.obj = secondHandMarketCategoryBean.getGoods();
-                        msg.what = 1;
-                        handler.sendMessage(msg);
+                        datas = secondHandMarketCategoryBean.getGoods();
+                        secondHandMarketCategoryAdapter = new SecondHandMarketCategoryAdapter(datas);
+                        recyclerView.setAdapter(secondHandMarketCategoryAdapter);
+                        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(SecondHandMarketMoreGoodsActivity.this, new RecyclerItemClickListener.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(View view, int position) {
+                                getJsonData(HttpUtil.GET_SECOND_MARKET_GOOD_BY_GID + datas.get(position).getSecondgoods_id(), "detailData");
+                            }
+                        }));
+                        mSwipeRefreshWidget.setRefreshing(false);
+
+                        recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+                            @Override
+                            public void onScrollStateChanged(RecyclerView recyclerView,
+                                                             int newState) {
+                                super.onScrollStateChanged(recyclerView, newState);
+                                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                                    int lastVisibleItem = linearLayoutManager.findLastCompletelyVisibleItemPosition();
+                                    Log.i("item", String.valueOf(lastVisibleItem));
+                                    if (lastVisibleItem + 1 == secondHandMarketCategoryAdapter.getItemCount()) {
+                                        mSwipeRefreshWidget.setRefreshing(true);
+                                        if (pageEnd == false) {
+                                            if (flag == 1) {
+                                                Log.i("page", String.valueOf(page));
+                                                getJsonData(HttpUtil.GET_SECOND_MARKET_GOOD_SALE_PAGE + page + "?limit=" + 3, "homeDataMore");
+
+                                            } else {
+                                                Log.i("page", String.valueOf(page));
+                                                getJsonData(HttpUtil.GET_SECOND_MARKET_GOOD_PURCHASE_PAGE + page + "?limit=" + 3, "homeDataMore");
+                                            }
+                                        } else {
+                                            Toast.makeText(getApplicationContext(), "到底了", Toast.LENGTH_SHORT).show();
+                                        }
+
+                                        mSwipeRefreshWidget.setRefreshing(false);
+                                    }
+                                }
+                            }
+
+                        });
+
                         break;
                     case "homeDataClicked":
-                        msg = handler.obtainMessage();
+                        addPage();
                         secondHandMarketCategoryBean = parseJsonData(json, SecondHandMarketCategoryBean.class);
-                        msg.obj = secondHandMarketCategoryBean.getGoods();
-                        msg.what = 2;
-                        handler.sendMessage(msg);
+                        datas.clear();
+                        datas.addAll(secondHandMarketCategoryBean.getGoods());
+                        secondHandMarketCategoryAdapter.notifyDataSetChanged();
+                        mSwipeRefreshWidget.setRefreshing(false);
                         break;
                     case "homeDataMore":
-                            msg = handler.obtainMessage();
-                            secondHandMarketCategoryBean = parseJsonData(json, SecondHandMarketCategoryBean.class);
-                           if(secondHandMarketCategoryBean.getGoods().isEmpty()){
-                               pageEnd = true;
-                               Toast.makeText(getApplicationContext(),"到底了",Toast.LENGTH_SHORT).show();
-                            }
-                        else {
-                               msg.obj = secondHandMarketCategoryBean.getGoods();
-                               msg.what = 3;
-                               handler.sendMessage(msg);
-                            }
+                        addPage();
+
+                        secondHandMarketCategoryBean = parseJsonData(json, SecondHandMarketCategoryBean.class);
+                        if (secondHandMarketCategoryBean.getGoods().isEmpty()) {
+                            pageEnd = true;
+                            Toast.makeText(getApplicationContext(), "到底了", Toast.LENGTH_SHORT).show();
+                        } else {
+                            datas.addAll(secondHandMarketCategoryBean.getGoods());
+                            secondHandMarketCategoryAdapter.notifyDataSetChanged();
+                            mSwipeRefreshWidget.setRefreshing(false);
+                        }
                         break;
                     case "detailData":
                         secondHandMarketGoodsDetailBean = parseJsonData(json, SecondHandMarketGoodsDetailBean.class);
                         Intent intent = new Intent(SecondHandMarketMoreGoodsActivity.this, SecondHandMarketGoodsDetailActivity.class);
                         intent.putExtra("secondHandMarketGoodsDetailBean", secondHandMarketGoodsDetailBean);
                         startActivity(intent);
+                        mSwipeRefreshWidget.setRefreshing(false);
                         break;
                 }
             }
@@ -237,8 +206,8 @@ public class SecondHandMarketMoreGoodsActivity extends ActionBarActivity {
         T t = gson.fromJson(json, classParam);
         return t;
     }
-    private void addPage()
-    {
+
+    private void addPage() {
         page++;
     }
 }

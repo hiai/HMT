@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import cn.edu.scau.hometown.R;
@@ -55,11 +57,16 @@ public class SecondHandMarketCategoryAdapter extends RecyclerView.Adapter<Second
                 .displayImage(datas.get(position).getSecondgoods_picture(),holder.iv_goodpic,options);
         holder.tv_goodsname.setText(datas.get(position).getSecondgoods_name());
         holder.tv_checkednum.setText(datas.get(position).getSecondgoods_views());
-        holder.tv_overdueOrnot.setText(datas.get(position).getSecondgoods_pastdate());
-        holder.tv_time.setText(datas.get(position).getSecondgoods_postdate());
+        holder.tv_overdueOrnot.setText("交易状态:"+datas.get(position).getSecondgoods_efficiency());
+        holder.tv_time.setText("发布于:"+getDate(datas.get(position).getSecondgoods_postdate()));
 
     }
-
+    private String getDate(String time) {
+        long i = Long.parseLong(time);
+        Date date = new Date(i*1000);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        return format.format(date);
+    }
 
     class ViewHolder extends RecyclerView.ViewHolder {
         ImageView iv_goodpic;

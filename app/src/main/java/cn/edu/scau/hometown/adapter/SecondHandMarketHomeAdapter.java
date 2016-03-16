@@ -1,11 +1,8 @@
 package cn.edu.scau.hometown.adapter;
 
-import android.content.Context;
+
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.ViewHolder;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -82,7 +79,7 @@ public class SecondHandMarketHomeAdapter extends RecyclerView.Adapter<SecondHand
                 .displayImage(datas.get(realposition).getSecondgoods_picture(), holder.iv_goodpic, options);
         holder.tv_goodsname.setText(datas.get(realposition).getSecondgoods_name());
         holder.tv_checkednum.setText(datas.get(realposition).getSecondgoods_views());
-        holder.tv_overdueOrnot.setText("交易状态:"+datas.get(realposition).getSecondgoods_postdate());
+        holder.tv_overdueOrnot.setText("交易状态:"+datas.get(realposition).getSecondgoods_efficiency());
         holder.tv_time.setText("发布于:"+getDate(datas.get(realposition).getSecondgoods_postdate()));
 
     }
@@ -96,9 +93,6 @@ public class SecondHandMarketHomeAdapter extends RecyclerView.Adapter<SecondHand
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         return format.format(date);
     }
-
-
-
 
     class ViewHolder extends RecyclerView.ViewHolder {
         ImageView iv_goodpic;

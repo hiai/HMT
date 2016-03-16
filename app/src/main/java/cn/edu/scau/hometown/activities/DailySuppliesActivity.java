@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
@@ -19,8 +20,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
-
-import java.util.Collection;
 import java.util.List;
 
 import cn.edu.scau.hometown.R;
@@ -34,8 +33,6 @@ public class DailySuppliesActivity extends ActionBarActivity {
 
     private RequestQueue requestQueue;
     private RecyclerView recyclerView;
-    private MyHandler handler;
-    private Message msg;
     private List<SecondHandMarketCategoryBean.GoodsEntity> datas;
     private SecondHandMarketCategoryBean secondHandMarketCategoryBean;
     private SecondHandMarketCategoryAdapter secondHandMarketCategoryAdapter;
@@ -44,12 +41,13 @@ public class DailySuppliesActivity extends ActionBarActivity {
     private boolean pageEnd;
     private SwipeRefreshLayout mSwipeRefreshWidget;
     private LinearLayoutManager linearLayoutManager;
+    private ImageView iv_back;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_daily_supplies);
 
-        handler = new MyHandler();
+
         requestQueue = Volley.newRequestQueue(DailySuppliesActivity.this);
         initView();
         getJsonData(HttpUtil.GET_SECOND_MARKET_GOOD_BY_DIRECTORY_ID + 14 + "/p/" + page + "?limit=" + 1, "homeData");
@@ -66,61 +64,17 @@ public class DailySuppliesActivity extends ActionBarActivity {
         recyclerView = (RecyclerView) findViewById(R.id.second_home_category_recycle);
         linearLayoutManager = new LinearLayoutManager(DailySuppliesActivity.this);
         recyclerView.setLayoutManager(linearLayoutManager);
-    }
-
-
-    class MyHandler extends Handler {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what) {
-                case 1:
-                    addPage();
-                    datas = (List<SecondHandMarketCategoryBean.GoodsEntity>) msg.obj;
-                    secondHandMarketCategoryAdapter = new SecondHandMarketCategoryAdapter(datas);
-                    recyclerView.setAdapter(secondHandMarketCategoryAdapter);
-                    recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(DailySuppliesActivity.this, new RecyclerItemClickListener.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(View view, int position) {
-                            getJsonData(HttpUtil.GET_SECOND_MARKET_GOOD_BY_GID + datas.get(position).getSecondgoods_id(), "detailData");
-                        }
-                    }));
-                    mSwipeRefreshWidget.setRefreshing(false);
-                    recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
-                        @Override
-                        public void onScrollStateChanged(RecyclerView recyclerView,
-                                                         int newState) {
-                            super.onScrollStateChanged(recyclerView, newState);
-                            if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                                int lastVisibleItem = linearLayoutManager.findLastCompletelyVisibleItemPosition();
-                                Log.i("item", String.valueOf(lastVisibleItem));
-                                if (lastVisibleItem + 1 == secondHandMarketCategoryAdapter.getItemCount()) {
-                                    mSwipeRefreshWidget.setRefreshing(true);
-                                    if (pageEnd == false) {
-
-                                        getJsonData(HttpUtil.GET_SECOND_MARKET_GOOD_BY_DIRECTORY_ID + 14 + "/p/" + page + "?limit=" + 1, "homeDataMore");
-
-                                    } else {
-                                        Toast.makeText(getApplicationContext(), "到底了", Toast.LENGTH_SHORT).show();
-                                    }
-
-                                    mSwipeRefreshWidget.setRefreshing(false);
-                                }
-                            }
-                        }
-
-                    });
-                    break;
-                case 3:
-                    addPage();
-                    datas.addAll((List<SecondHandMarketCategoryBean.GoodsEntity>) msg.obj);
-                    secondHandMarketCategoryAdapter.notifyDataSetChanged();
-                    mSwipeRefreshWidget.setRefreshing(false);
-                    break;
-
+        iv_back = (ImageView) findViewById(R.id.back);
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DailySuppliesActivity.this.finish();
             }
-        }
+        });
     }
+
+
+
     /**
      * 得到json
      *
@@ -133,30 +87,66 @@ public class DailySuppliesActivity extends ActionBarActivity {
             public void onResponse(String json) {
                 switch (type) {
                     case "homeData":
-                        msg = handler.obtainMessage();
+                        addPage();
+
                         secondHandMarketCategoryBean = parseJsonData(json, SecondHandMarketCategoryBean.class);
-                        msg.obj = secondHandMarketCategoryBean.getGoods();
-                        msg.what = 1;
-                        handler.sendMessage(msg);
+                        datas = secondHandMarketCategoryBean.getGoods();
+                        secondHandMarketCategoryAdapter = new SecondHandMarketCategoryAdapter(datas);
+                        recyclerView.setAdapter(secondHandMarketCategoryAdapter);
+                        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(DailySuppliesActivity.this, new RecyclerItemClickListener.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(View view, int position) {
+                                getJsonData(HttpUtil.GET_SECOND_MARKET_GOOD_BY_GID + datas.get(position).getSecondgoods_id(), "detailData");
+                            }
+                        }));
+                        mSwipeRefreshWidget.setRefreshing(false);
+                        recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+                            @Override
+                            public void onScrollStateChanged(RecyclerView recyclerView,
+                                                             int newState) {
+                                super.onScrollStateChanged(recyclerView, newState);
+                                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                                    int lastVisibleItem = linearLayoutManager.findLastCompletelyVisibleItemPosition();
+                                    Log.i("item", String.valueOf(lastVisibleItem));
+                                    if (lastVisibleItem + 1 == secondHandMarketCategoryAdapter.getItemCount()) {
+                                        mSwipeRefreshWidget.setRefreshing(true);
+                                        if (pageEnd == false) {
+
+                                            getJsonData(HttpUtil.GET_SECOND_MARKET_GOOD_BY_DIRECTORY_ID + 14 + "/p/" + page + "?limit=" + 1, "homeDataMore");
+
+                                        } else {
+                                            Toast.makeText(getApplicationContext(), "到底了", Toast.LENGTH_SHORT).show();
+                                        }
+
+                                        mSwipeRefreshWidget.setRefreshing(false);
+                                    }
+                                }
+                            }
+
+                        });
                         break;
                     case "homeDataMore":
-                        msg = handler.obtainMessage();
+                        addPage();
+
                         secondHandMarketCategoryBean = parseJsonData(json, SecondHandMarketCategoryBean.class);
                         if(secondHandMarketCategoryBean.getGoods().isEmpty()){
                             pageEnd = true;
                             Toast.makeText(getApplicationContext(),"到底了",Toast.LENGTH_SHORT).show();
                         }
                         else {
-                            msg.obj = secondHandMarketCategoryBean.getGoods();
-                            msg.what = 3;
-                            handler.sendMessage(msg);
+                            datas.addAll(secondHandMarketCategoryBean.getGoods());
+                            secondHandMarketCategoryAdapter.notifyDataSetChanged();
+                            mSwipeRefreshWidget.setRefreshing(false);
                         }
+
+
                         break;
                     case "detailData":
                         secondHandMarketGoodsDetailBean = parseJsonData(json, SecondHandMarketGoodsDetailBean.class);
                         Intent intent = new Intent(DailySuppliesActivity.this, SecondHandMarketGoodsDetailActivity.class);
                         intent.putExtra("secondHandMarketGoodsDetailBean", secondHandMarketGoodsDetailBean);
                         startActivity(intent);
+                        mSwipeRefreshWidget.setRefreshing(false);
                         break;
                 }
             }
