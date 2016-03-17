@@ -3,6 +3,8 @@ package cn.edu.scau.hometown;
 import android.app.Application;
 import android.content.Context;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -21,6 +23,7 @@ public class MyApplication extends Application {
     //用户信息的数据类
     private HmtUserBasedInfo hmtUserBasedInfo;
     private RefWatcher refWatcher;
+    public static RequestQueue requestQueue;
 
 
     public  HmtUserBasedInfo getHmtUserBasedInfo() {
@@ -30,7 +33,7 @@ public class MyApplication extends Application {
     public void setHmtUserBasedInfo(HmtUserBasedInfo hmtUserBasedInfo) {
         this.hmtUserBasedInfo = hmtUserBasedInfo;
     }
-public static RefWatcher getRefWatcher(Context context){
+   public static RefWatcher getRefWatcher(Context context){
     MyApplication application=(MyApplication)context.getApplicationContext();
     return application.refWatcher;
 
@@ -44,5 +47,7 @@ public static RefWatcher getRefWatcher(Context context){
         ImageLoader.getInstance().init(configuration);
         setHmtUserBasedInfo((HmtUserBasedInfo) DataUtil.getObject("登陆数据", this));
          refWatcher = LeakCanary.install(this);
+        //避免创建多个requestqueue和造成内存泄漏
+        requestQueue = Volley.newRequestQueue(this);
     }
 }

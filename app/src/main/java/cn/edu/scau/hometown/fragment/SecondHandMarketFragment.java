@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import cn.bingoogolapple.bgabanner.BGABanner;
+import cn.edu.scau.hometown.MyApplication;
 import cn.edu.scau.hometown.R;
 import cn.edu.scau.hometown.activities.BikeSaleActivity;
 import cn.edu.scau.hometown.activities.BookSaleActivity;
@@ -56,7 +57,7 @@ public class SecondHandMarketFragment extends Fragment implements View.OnClickLi
     private SecondHandMarketHomeBean secondHandMarketHomeBean;
     private SecondHandMarketGoodsDetailBean secondHandMarketGoodsDetailBean;
     private SwipeRefreshLayout mSwipeRefreshWidget;
-    private RequestQueue requestQueue;
+
     private RecyclerView recyclerView;
     private List<SecondHandMarketHomeBean.GoodsEntity> datas;
     private SecondHandMarketHomeAdapter secondHandMarketHomeAdapter;
@@ -70,7 +71,7 @@ public class SecondHandMarketFragment extends Fragment implements View.OnClickLi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestQueue = Volley.newRequestQueue(getActivity());
+
 
 
     }
@@ -268,7 +269,8 @@ public class SecondHandMarketFragment extends Fragment implements View.OnClickLi
 
             }
         });
-        requestQueue.add(stringRequest);
+
+        MyApplication.requestQueue.add(stringRequest);
     }
 
     /**

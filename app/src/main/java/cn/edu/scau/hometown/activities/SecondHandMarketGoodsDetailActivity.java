@@ -62,9 +62,9 @@ public class SecondHandMarketGoodsDetailActivity extends ActionBarActivity imple
     }
     private void initGoodsData() {
         name.setText(secondHandMarketGoodsDetailBean.getSecondgoods_name());
-        price.setText(secondHandMarketGoodsDetailBean.getSecondgoods_price());
-        view.setText(secondHandMarketGoodsDetailBean.getSecondgoods_views());
-        state.setText(secondHandMarketGoodsDetailBean.getSecondgoods_efficiency());
+        price.setText("¥"+secondHandMarketGoodsDetailBean.getSecondgoods_price());
+        view.setText(secondHandMarketGoodsDetailBean.getSecondgoods_views()+"个人看过此商品");
+        state.setText("交易状态:"+secondHandMarketGoodsDetailBean.getSecondgoods_efficiency());
 
     }
     private void setDefaultFragment() {

@@ -26,6 +26,7 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.List;
 
+import cn.edu.scau.hometown.MyApplication;
 import cn.edu.scau.hometown.R;
 import cn.edu.scau.hometown.adapter.SecondHandMarketCategoryAdapter;
 import cn.edu.scau.hometown.bean.SecondHandMarketCategoryBean;
@@ -34,7 +35,7 @@ import cn.edu.scau.hometown.listener.RecyclerItemClickListener;
 import cn.edu.scau.hometown.tools.HttpUtil;
 
 public class SecondHandMarketSearchResultActivity extends ActionBarActivity {
-    private RequestQueue requestQueue;
+
     private RecyclerView recyclerView;
 
     private List<SecondHandMarketCategoryBean.GoodsEntity> datas;
@@ -61,7 +62,7 @@ public class SecondHandMarketSearchResultActivity extends ActionBarActivity {
             e.printStackTrace();
         }
 
-        requestQueue = Volley.newRequestQueue(SecondHandMarketSearchResultActivity.this);
+
         initView();
         getJsonData(HttpUtil.GET_SECOND_MARKET_GOOD_BY_KEY_WORD + page + "?name=" + goodName + "&limit=" + 1, "homeData");
     }
@@ -155,7 +156,7 @@ public class SecondHandMarketSearchResultActivity extends ActionBarActivity {
             public void onErrorResponse(VolleyError error) {
             }
         });
-        requestQueue.add(stringRequest);
+        MyApplication.requestQueue.add(stringRequest);
     }
 
     /**

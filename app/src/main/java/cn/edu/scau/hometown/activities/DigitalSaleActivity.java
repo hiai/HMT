@@ -28,6 +28,7 @@ import com.google.gson.Gson;
 import java.util.Collection;
 import java.util.List;
 
+import cn.edu.scau.hometown.MyApplication;
 import cn.edu.scau.hometown.R;
 import cn.edu.scau.hometown.adapter.SecondHandMarketCategoryAdapter;
 import cn.edu.scau.hometown.bean.SecondHandMarketCategoryBean;
@@ -37,7 +38,7 @@ import cn.edu.scau.hometown.listener.RecyclerItemClickListener;
 import cn.edu.scau.hometown.tools.HttpUtil;
 
 public class DigitalSaleActivity extends ActionBarActivity {
-    private RequestQueue requestQueue;
+
     private RecyclerView recyclerView;
     private List<SecondHandMarketCategoryBean.GoodsEntity> datas;
     private RadioGroup radioGroup;
@@ -57,7 +58,7 @@ public class DigitalSaleActivity extends ActionBarActivity {
         setContentView(R.layout.activity_digital_sale);
 
 
-        requestQueue = Volley.newRequestQueue(DigitalSaleActivity.this);
+
         initViews();
         getJsonData(HttpUtil.GET_SECOND_MARKET_GOOD_BY_DIRECTORY_ID + 8 + "/p/" + page + "?limit=" + 1 , "homeData");
 
@@ -215,7 +216,7 @@ public class DigitalSaleActivity extends ActionBarActivity {
             public void onErrorResponse(VolleyError error) {
             }
         });
-        requestQueue.add(stringRequest);
+        MyApplication.requestQueue.add(stringRequest);
     }
 
     /**

@@ -27,6 +27,7 @@ import com.google.gson.Gson;
 import java.util.Collection;
 import java.util.List;
 
+import cn.edu.scau.hometown.MyApplication;
 import cn.edu.scau.hometown.R;
 
 import cn.edu.scau.hometown.adapter.SecondHandMarketCategoryAdapter;
@@ -39,7 +40,7 @@ import cn.edu.scau.hometown.tools.HttpUtil;
 
 public class SecondHandMarketMoreGoodsActivity extends ActionBarActivity {
 
-    private RequestQueue requestQueue;
+
     private RecyclerView recyclerView;
     private List<SecondHandMarketCategoryBean.GoodsEntity> datas;
 
@@ -59,7 +60,7 @@ public class SecondHandMarketMoreGoodsActivity extends ActionBarActivity {
         setContentView(R.layout.activity_second_hand_market_more_goods);
 
 
-        requestQueue = Volley.newRequestQueue(SecondHandMarketMoreGoodsActivity.this);
+
         initViews();
         getJsonData(HttpUtil.GET_SECOND_MARKET_GOOD_SALE_PAGE + page + "?limit=" + 3, "homeData");
 
@@ -189,7 +190,7 @@ public class SecondHandMarketMoreGoodsActivity extends ActionBarActivity {
             public void onErrorResponse(VolleyError error) {
             }
         });
-        requestQueue.add(stringRequest);
+        MyApplication.requestQueue.add(stringRequest);
     }
 
     /**
