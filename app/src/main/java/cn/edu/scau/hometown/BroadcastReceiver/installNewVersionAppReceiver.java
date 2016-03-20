@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
+import java.lang.ref.WeakReference;
+
 import cn.edu.scau.hometown.bean.LatestVersionInfo;
 import cn.edu.scau.hometown.tools.NewVersionUpdateUtil;
 
@@ -20,7 +22,7 @@ public class InstallNewVersionAppReceiver extends BroadcastReceiver{
         if(intent.getAction().equals(DownloadManager.ACTION_DOWNLOAD_COMPLETE)){
             long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
            if (id==NewVersionUpdateUtil.downloadID&&!NewVersionUpdateUtil.cancelDownload){
-               NewVersionUpdateUtil.installNewVersionApp(context);
+               NewVersionUpdateUtil.installNewVersionApp(new WeakReference<Context>(context));
            }
         }else if(intent.getAction().equals(DownloadManager.ACTION_NOTIFICATION_CLICKED)){
             NewVersionUpdateUtil.cancelDownload();

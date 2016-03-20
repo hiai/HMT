@@ -2,6 +2,7 @@ package cn.edu.scau.hometown.activities;
 
 import android.animation.ArgbEvaluator;
 import android.app.DownloadManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -27,6 +28,7 @@ import android.widget.ImageView;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.umeng.analytics.MobclickAgent;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
 
         InitToolBar();
         InitTabLayout();
-        NewVersionUpdateUtil.checkUpdate(this,false);
+        NewVersionUpdateUtil.checkUpdate(new WeakReference<Context>(this),false);
 
     }
 
@@ -102,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        NewVersionUpdateUtil.unregisterReceiver(this);
+        NewVersionUpdateUtil.unregisterReceiver(new WeakReference<Context>(this));
         super.onDestroy();
     }
 
