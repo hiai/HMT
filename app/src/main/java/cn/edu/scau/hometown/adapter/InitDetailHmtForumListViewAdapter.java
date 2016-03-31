@@ -380,7 +380,7 @@ public class InitDetailHmtForumListViewAdapter extends RecyclerView.Adapter<Init
     /**
      * 根据ImageView获适当的压缩的宽和高
      *
-     * @param imageView
+     * @param
      * @return
      */
     public static int getImageViewWidth(TextView textView)

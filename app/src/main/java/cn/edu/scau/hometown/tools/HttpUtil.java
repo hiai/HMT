@@ -12,12 +12,12 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 
 
+
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.Enumeration;
-import java.util.concurrent.Callable;
-import java.util.concurrent.FutureTask;
+
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -33,15 +33,21 @@ public class HttpUtil {
     public static final String GET_HMT_FORUM_POSTS_CONTENT_BY_FID="http://hometown.scau.edu.cn/bbs/plugin.php?id=iltc_open:thread&fid=";
     public static final String GET_PICTURES_GUIDE_TO_THREADS="http://hometown.scau.edu.cn/bbs/plugin.php?id=iltc_open:xshow&action=image";
     public static final String GET_POST_THREADS_ATTACHMENT_BY_TID_AND_AID="http://hometown.scau.edu.cn/bbs/plugin.php?id=iltc_open:attachment&action=view&tid=";
-    public static final String GET_SECOND_MARKET_DATA="http://192.168.253.73/hometown_market/hometownMarket/index.php/Home/Api";
-    public static final String GET_SECOND_MARKET_GOOD_BY_GID="http://192.168.253.73/hometown_market/hometownMarket/index.php/Home/Api/good/id/";
-    public static final String GET_SECOND_MARKET_GOOD_BY_DIRECTORY_ID="http://192.168.253.73/hometown_market/hometownMarket/index.php/Home/Api/catalog/cate/";
-    public static final String GET_SECOND_MARKET_GOOD_BY_KEY_WORD="http://192.168.253.73/hometown_market/hometownMarket/index.php/Home/Api/search/name/";
+
+    public static final String GET_SECOND_MARKET_DATA="http://202.116.162.17/index.php/Home/Api";
+    public static final String GET_SECOND_MARKET_GOOD_BY_GID="http://202.116.162.17/index.php/Home/Api/good/id/";
+    public static final String GET_SECOND_MARKET_GOOD_BY_DIRECTORY_ID="http://202.116.162.17/index.php/Home/Api/catalog/cate/";
+    public static final String GET_SECOND_MAEKET_GOOD_PURCHASE = "http://202.116.162.17/index.php/Home/Api/purchase";
+    public static final String GET_SECOND_MARKET_GOOD_BY_KEY_WORD="http://202.116.162.17/index.php/Home/Api/search/p/";
+    public static final String GET_SECOND_MARKET_GOOD_PIC="http://202.116.162.17/index.php/Home/Api/pics";
+    public static final String GET_SECOND_MARKET_GOOD_SALE_PAGE= "http://market.h.jaylin.me/index.php/Home/Api/index/p/";
+    public static final String GET_SECOND_MARKET_GOOD_PURCHASE_PAGE= "http://202.116.162.17/index.php/Home/Api/purchase/index/p/";
 
     //图片服务器地址，APP给出需要的图片宽度，服务器返回一定宽度的图片，与给出的宽度不一定相等，只是接近
     public static final String GET_POST_THREADS_ATTACHMENT_SCALED_BY_TID_AND_AID="http://202.116.162.17:8200/image/getImage?id=iltc_open:attachment&action=view&tid=";
     //获取最新APP的信息，用于更新版本
     public static final String  LATEST_VERSION_INFORMATION_URL="http://1.hiai.sinaapp.com/TestTheAppUpdate";
+
 
     /**
      * @param url 發送請求的url

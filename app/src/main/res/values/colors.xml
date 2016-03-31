@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="white">#ffffff</color>
+    <color name="tab_red">#ff3333</color>
     <color name="tab_pink">#ff80ab</color>
     <color name="tab_purple">#9575cd</color>
     <color name="tab_blue">#10B5DE</color>

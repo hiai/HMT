@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <RelativeLayout
+        android:background="@color/tab_red"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/back"
+            android:layout_margin="5dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/v5_0_1_flipper_head_back"/>
+        <TextView
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="商品详情"
+            android:textSize="20dp"
+            android:textColor="@color/white"/>
+    </RelativeLayout>
+    <cn.bingoogolapple.bgabanner.BGABanner xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/banner_splash_pager"
+        android:layout_width="match_parent"
+        android:layout_height="170dp"
+        app:banner_pointAutoPlayAble="true"
+        app:banner_pointGravity="center_horizontal"
+        app:banner_pointTopBottomMargin="15dp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+
+        <TextView
+            android:layout_marginLeft="20dp"
+            android:id="@+id/goods_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="茶山小区豪装两房低价急租"
+            android:textSize="25dp"
+            android:textColor="#000"/>
+        <TextView
+            android:layout_marginTop="10dp"
+            android:id="@+id/goods_price"
+            android:layout_marginLeft="20dp"
+            android:layout_below="@+id/goods_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="¥4300"
+            android:textSize="30dp"
+            android:textColor="@color/tab_red"/>
+        <TextView
+            android:id="@+id/goods_view"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_below="@+id/goods_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="20个人看过此商品"/>
+        <TextView
+            android:id="@+id/goods_state"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/goods_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="交易状态：进行中"/>
+    </RelativeLayout>
+
+
+
+
+    <RadioGroup
+        android:layout_marginTop="15dp"
+        android:id="@+id/radiogroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <RadioButton
+            android:id="@+id/radiobtn1"
+            android:onClick="onClick"
+            android:text="商品信息"
+            android:checked="true"
+            android:background="@drawable/radio_button_selector"
+            android:textColor="@color/text_color_selector"
+            style="@style/radiobuttonstyle1"
+            />
+        <RadioButton
+            android:onClick="onClick"
+            android:id="@+id/radiobtn2"
+            android:text="留言"
+            android:background="@drawable/radio_button_selector"
+            android:textColor="@color/text_color_selector"
+            style="@style/radiobuttonstyle1" />
+    </RadioGroup>
+    <FrameLayout
+        android:id="@+id/f_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </FrameLayout>
+
+
+
+</LinearLayout>

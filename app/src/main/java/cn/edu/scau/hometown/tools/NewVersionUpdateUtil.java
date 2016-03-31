@@ -21,6 +21,7 @@ import java.lang.ref.WeakReference;
 import cn.edu.scau.hometown.MyApplication;
 import cn.edu.scau.hometown.bean.HmtForumPostList;
 import cn.edu.scau.hometown.bean.LatestVersionInfo;
+
 import cn.edu.scau.hometown.broadcastreceiver.InstallNewVersionAppReceiver;
 import cn.edu.scau.hometown.view.CustomDialog;
 import me.drakeet.materialdialog.MaterialDialog;

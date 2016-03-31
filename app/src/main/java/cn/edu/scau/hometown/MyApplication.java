@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -29,10 +31,16 @@ public class MyApplication extends Application {
     //用户信息的数据类
     private HmtUserBasedInfo hmtUserBasedInfo;
     private RefWatcher refWatcher;
+
+    public static RequestQueue requestQueue;
+
     private static MyApplication instance;
 
 
-    public HmtUserBasedInfo getHmtUserBasedInfo() {
+
+
+    public  HmtUserBasedInfo getHmtUserBasedInfo() {
+
         return hmtUserBasedInfo;
     }
 
@@ -40,11 +48,14 @@ public class MyApplication extends Application {
         this.hmtUserBasedInfo = hmtUserBasedInfo;
     }
 
+
     public static RefWatcher getRefWatcher(Context context) {
+
         MyApplication application = (MyApplication) context.getApplicationContext();
         return application.refWatcher;
-
     }
+
+
 
     @Override
     public void onCreate() {
@@ -53,7 +64,13 @@ public class MyApplication extends Application {
         ImageLoaderConfiguration configuration = ImageLoaderConfiguration.createDefault(this);
         ImageLoader.getInstance().init(configuration);
         setHmtUserBasedInfo((HmtUserBasedInfo) DataUtil.getObject("登陆数据", this));
-        refWatcher = LeakCanary.install(this);
+
+         refWatcher = LeakCanary.install(this);
+
+        //避免创建多个requestqueue和造成内存泄漏
+        requestQueue = Volley.newRequestQueue(this);
+
+
         instance = this;
         MobclickAgent.openActivityDurationTrack(false);
         MobclickAgent.setDebugMode(true);
@@ -64,6 +81,7 @@ public class MyApplication extends Application {
     public static MyApplication getInstance() {
 
         return instance;
+
     }
 
     /*
