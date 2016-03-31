@@ -6,27 +6,10 @@ import java.util.List;
 /**
  * Created by Administrator on 2015/10/11 0011.
  */
-public class SecondMarketData4 implements Serializable{
+public class SecondHandMarketHomeBean implements Serializable{
 
-    /**
-     * goods : [{"secondgoods_id":"67","secondgoods_price":"21","secondgoods_name":"1234","secondgoods_views":"4","secondgoods_bewrite":"123123","secondgoods_postdate":"1439290356","secondgoods_pastdate":"1439549556","secondgoods_picture":null}]
-     * page : <nav><ul class="pagination">    </ul></nav>
-     */
 
-    private String page;
     private List<GoodsEntity> goods;
-
-    public void setPage(String page) {
-        this.page = page;
-    }
-
-    public void setGoods(List<GoodsEntity> goods) {
-        this.goods = goods;
-    }
-
-    public String getPage() {
-        return page;
-    }
 
     public List<GoodsEntity> getGoods() {
         return goods;
@@ -34,13 +17,13 @@ public class SecondMarketData4 implements Serializable{
 
     public static class GoodsEntity implements Serializable{
         /**
-         * secondgoods_id : 67
-         * secondgoods_price : 21
-         * secondgoods_name : 1234
-         * secondgoods_views : 4
-         * secondgoods_bewrite : 123123
-         * secondgoods_postdate : 1439290356
-         * secondgoods_pastdate : 1439549556
+         * secondgoods_id : 58
+         * secondgoods_price : 12
+         * secondgoods_name : 商品fromalextest7
+         * secondgoods_views : 12
+         * secondgoods_bewrite : 疯狂点开始放假
+         * secondgoods_postdate : 1435635503
+         * secondgoods_pastdate : 1435894703
          * secondgoods_picture : null
          */
 
@@ -51,7 +34,8 @@ public class SecondMarketData4 implements Serializable{
         private String secondgoods_bewrite;
         private String secondgoods_postdate;
         private String secondgoods_pastdate;
-        private Object secondgoods_picture;
+        private String secondgoods_picture;
+        private String secondgoods_efficiency;
 
         public void setSecondgoods_id(String secondgoods_id) {
             this.secondgoods_id = secondgoods_id;
@@ -81,9 +65,6 @@ public class SecondMarketData4 implements Serializable{
             this.secondgoods_pastdate = secondgoods_pastdate;
         }
 
-        public void setSecondgoods_picture(Object secondgoods_picture) {
-            this.secondgoods_picture = secondgoods_picture;
-        }
 
         public String getSecondgoods_id() {
             return secondgoods_id;
@@ -113,8 +94,21 @@ public class SecondMarketData4 implements Serializable{
             return secondgoods_pastdate;
         }
 
-        public Object getSecondgoods_picture() {
+
+        public String getSecondgoods_picture() {
             return secondgoods_picture;
+        }
+
+        public void setSecondgoods_picture(String secondgoods_picture) {
+            this.secondgoods_picture = secondgoods_picture;
+        }
+
+        public String getSecondgoods_efficiency() {
+            return secondgoods_efficiency;
+        }
+
+        public void setSecondgoods_efficiency(String secondgoods_efficiency) {
+            this.secondgoods_efficiency = secondgoods_efficiency;
         }
     }
 }

@@ -160,8 +160,8 @@ public class SearchCoursesActivity extends SwipeBackActivity implements SearchMe
             }
         });
         // 设置进度条的颜色主题，最多能设置四种
-        lo_swiper.setColorScheme(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
+        lo_swiper.setColorScheme(android.R.color.holo_green_light,
+                android.R.color.holo_blue_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
 

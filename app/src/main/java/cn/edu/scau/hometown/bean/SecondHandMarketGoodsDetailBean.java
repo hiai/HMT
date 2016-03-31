@@ -4,10 +4,9 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * Created by Administrator on 2015/10/11 0011.
+ * Created by lenovo on 2015/11/16.
  */
-public class SecondMarketData2 implements Serializable{
-
+public class SecondHandMarketGoodsDetailBean implements Serializable {
     /**
      * secondgoods_id : 96
      * secondgoods_name : 超级多

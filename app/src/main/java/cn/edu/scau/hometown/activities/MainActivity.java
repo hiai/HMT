@@ -10,6 +10,7 @@ import android.os.*;
 import android.os.Process;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -34,11 +35,11 @@ import java.util.List;
 
 import cn.edu.scau.hometown.R;
 import cn.edu.scau.hometown.bean.LatestVersionInfo;
-import cn.edu.scau.hometown.broadcastreceiver.InstallNewVersionAppReceiver;
+import cn.edu.scau.hometown.broadcastReceiver.InstallNewVersionAppReceiver;
 import cn.edu.scau.hometown.fragment.FocusFragment;
 import cn.edu.scau.hometown.fragment.HmtForumFragment;
 import cn.edu.scau.hometown.fragment.PartitionFragment;
-import cn.edu.scau.hometown.fragment.SecondaryMarketFragment;
+import cn.edu.scau.hometown.fragment.SecondHandMarketFragment;
 
 import cn.edu.scau.hometown.tools.NewVersionUpdateUtil;
 
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
     //退出时弹出snackBar用到的父级容器
     private CoordinatorLayout ll_main;
     //判断在不同的Fragment中显示不同的snackBar背景颜色
-    private String snackBarBackGroupColor = "Tab_green";
+    private String snackBarBackGroupColor = "Tab_red";
     private Toolbar toolbar;
     private ImageView iv_search;
     //抽屉式布局
@@ -73,8 +74,10 @@ public class MainActivity extends AppCompatActivity {
         Fresco.initialize(getApplicationContext());
         setContentView(R.layout.activity_main);
         ll_main = (CoordinatorLayout) findViewById(R.id.main);
-        fragments = new ArrayList<Fragment>();
-        fragments.add(new SecondaryMarketFragment());
+
+        fragments=new ArrayList<Fragment>();
+        fragments.add(new SecondHandMarketFragment());
+
         fragments.add(new HmtForumFragment());
         fragments.add(new PartitionFragment());
         fragments.add(new FocusFragment());
@@ -91,8 +94,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void InitToolBar() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("红满堂 有你更美好");
-        toolbar.setBackgroundColor(getResources().getColor(R.color.tab_green));
+
+        toolbar.setTitle("华农人的红满堂");
+        toolbar.setBackgroundColor(getResources().getColor(R.color.tab_red));
         setSupportActionBar(toolbar);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerlayout);
@@ -120,14 +124,14 @@ public class MainActivity extends AppCompatActivity {
                 if (position == 0) {
                     mTabLayout.setBackgroundColor(getResources().getColor(R.color.tab_blue));
                     toolbar.setBackgroundColor(getResources().getColor(R.color.tab_blue));
-                    int evaluate = (Integer) evaluator.evaluate(positionOffset, getResources().getColor(R.color.tab_green), getResources().getColor(R.color.tab_blue));
+                    int evaluate = (Integer) evaluator.evaluate(positionOffset, getResources().getColor(R.color.tab_red), getResources().getColor(R.color.tab_blue));
                     mTabLayout.setBackgroundColor(evaluate);
                     toolbar.setBackgroundColor(evaluate);
                 }
                 if (0 < position && position < 1) {
                     mTabLayout.setBackgroundColor(getResources().getColor(R.color.tab_blue));
                     toolbar.setBackgroundColor(getResources().getColor(R.color.tab_blue));
-                    int evaluate = (Integer) evaluator.evaluate(positionOffset, getResources().getColor(R.color.tab_blue), getResources().getColor(R.color.tab_green));
+                    int evaluate = (Integer) evaluator.evaluate(positionOffset, getResources().getColor(R.color.tab_blue), getResources().getColor(R.color.tab_red));
                     mTabLayout.setBackgroundColor(evaluate);
                     toolbar.setBackgroundColor(evaluate);
                 }
@@ -188,8 +192,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
 
+
                 if (position == 0) {
-                    snackBarBackGroupColor = "Tab_green";
+                    snackBarBackGroupColor = "Tab_red";
                     MobclickAgent.onEvent(MainActivity.this,"Page_SecondHand");
                 }
 
@@ -208,6 +213,7 @@ public class MainActivity extends AppCompatActivity {
                 else if (position == 4){
                     snackBarBackGroupColor = "Tab_brown";
                 }
+
 
             }
 
@@ -235,8 +241,8 @@ public class MainActivity extends AppCompatActivity {
                 Snackbar sb = Snackbar.make(ll_main, "再按一次退出", Snackbar.LENGTH_SHORT);
                 if (snackBarBackGroupColor.equals("Tab_blue"))
                     sb.getView().setBackgroundColor(getResources().getColor(R.color.tab_blue));
-                else if (snackBarBackGroupColor.equals("Tab_green"))
-                    sb.getView().setBackgroundColor(getResources().getColor(R.color.tab_green));
+                else if (snackBarBackGroupColor.equals("Tab_red"))
+                    sb.getView().setBackgroundColor(getResources().getColor(R.color.tab_red));
                 else if (snackBarBackGroupColor.equals("Tab_purple"))
                     sb.getView().setBackgroundColor(getResources().getColor(R.color.tab_purple));
                 else if (snackBarBackGroupColor.equals("Tab_pink"))
