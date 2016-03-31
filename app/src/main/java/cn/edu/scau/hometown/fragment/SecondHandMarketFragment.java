@@ -182,21 +182,24 @@ public class SecondHandMarketFragment extends Fragment implements View.OnClickLi
         banner.setTransitionEffect(BGABanner.TransitionEffect.Default);
         banner.setPageChangeDuration(1000);
         List<View> views = new ArrayList<>();
-        ArrayList<String> picDate = new ArrayList<>();
-        ArrayList<String> picName = new ArrayList<>();
+//        ArrayList<String> picDate = new ArrayList<>();
+//        ArrayList<String> picName = new ArrayList<>();
+//
+//        for(int i =0;i<2;i++){
+//            picDate.add(secondHandMarketPicBean.getPics().get(i).getSeconduploads_location());
+//            picName.add(secondHandMarketPicBean.getPics().get(i).getSeconduploads_bewrite());
+//        }
+//        for(int i =0;i<2;i++) {
+//            ImageView imageView = new ImageView(getActivity());
+//            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+//            com.nostra13.universalimageloader.core.ImageLoader.getInstance().displayImage("http://market.h.jaylin.me/Uploads/" + picDate.get(i) + picName.get(i), imageView, options);
+//            Log.i("tree", "http://market.h.jaylin.me/Uploads/" + picDate.get(i) + picName.get(i));
+//            views.add(imageView);
+//        }
+       for(int i = 0;i<3;i++) {
+           views.add(getPageView(R.drawable.markethomepic));
+       }
 
-        for(int i =0;i<2;i++){
-            picDate.add(secondHandMarketPicBean.getPics().get(i).getSeconduploads_location());
-            picName.add(secondHandMarketPicBean.getPics().get(i).getSeconduploads_bewrite());
-        }
-        for(int i =0;i<2;i++) {
-            ImageView imageView = new ImageView(getActivity());
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            com.nostra13.universalimageloader.core.ImageLoader.getInstance().displayImage("http://market.h.jaylin.me/Uploads/" + picDate.get(i) + picName.get(i), imageView, options);
-            Log.i("tree", "http://market.h.jaylin.me/Uploads/" + picDate.get(i) + picName.get(i));
-            views.add(imageView);
-        }
-        views.add(getPageView(R.drawable.markethomepic));
         banner.setViews(views);
         banner.setVisibility(View.VISIBLE);
         mSwipeRefreshWidget.setRefreshing(false);

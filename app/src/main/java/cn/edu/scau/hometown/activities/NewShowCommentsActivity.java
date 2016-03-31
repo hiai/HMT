@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.bartoszlipinski.recyclerviewheader.RecyclerViewHeader;
+import com.umeng.analytics.MobclickAgent;
 
 import cn.edu.scau.hometown.R;
 import cn.edu.scau.hometown.adapter.NewInitCommentsViewAdapter;
@@ -103,6 +104,18 @@ public class NewShowCommentsActivity extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart(this.getClass().getName());
+        MobclickAgent.onResume(this);
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(this.getClass().getName());
+        MobclickAgent.onPause(this);
     }
 
 }

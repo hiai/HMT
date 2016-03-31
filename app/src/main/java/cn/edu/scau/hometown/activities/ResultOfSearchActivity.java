@@ -9,6 +9,8 @@ import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.umeng.analytics.MobclickAgent;
+
 import cn.edu.scau.hometown.R;
 
 /**
@@ -85,5 +87,16 @@ public class ResultOfSearchActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart(this.getClass().getName());
+        MobclickAgent.onResume(this);
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(this.getClass().getName());
+        MobclickAgent.onPause(this);
+    }
 }

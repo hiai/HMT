@@ -25,6 +25,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONObject;
 
@@ -211,5 +212,18 @@ public class LoginWebViewActivity extends SwipeBackActivity {
         SharedPreferences.Editor editor = sp.edit();
         editor.putString("accessToken", string);
         editor.apply();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart(this.getClass().getName());
+        MobclickAgent.onResume(this);
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(this.getClass().getName());
+        MobclickAgent.onPause(this);
     }
 }

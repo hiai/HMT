@@ -15,6 +15,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.Volley;
+import com.umeng.analytics.MobclickAgent;
 
 import cn.edu.scau.hometown.MyApplication;
 import cn.edu.scau.hometown.R;
@@ -69,6 +70,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         setListener();
 
         if (hmtUserBasedInfo != null) {
+
             LoginSuccess();
         }
 
@@ -102,10 +104,12 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         if (data == null) return;
         HmtUserBasedInfo   tempHmtUserBasedInfo = (HmtUserBasedInfo) data.getSerializableExtra("LoginResult");
         ((MyApplication)(getActivity().getApplication())).setHmtUserBasedInfo(tempHmtUserBasedInfo);
+
         LoginSuccess();
     }
   //成功登陆后利用获取到的用户信息类更新视图
     private void LoginSuccess() {
+        MobclickAgent.onEvent(getActivity(), "Event_SignIn");
         hmtUserBasedInfo=((MyApplication)(getActivity().getApplication())).getHmtUserBasedInfo();
         String userName = hmtUserBasedInfo.getData().getUsername();
         String userEmail = hmtUserBasedInfo.getData().getEmail();

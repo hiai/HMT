@@ -10,7 +10,12 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 
+import com.umeng.analytics.MobclickAgent;
+
+import java.lang.ref.WeakReference;
+
 import cn.edu.scau.hometown.R;
+import cn.edu.scau.hometown.tools.NewVersionUpdateUtil;
 /*
 *
 * create by hiai 2015.10.29
@@ -77,15 +82,15 @@ private void initToolbar(){
     }
 
 
-
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case  R.id.ll_exitAccount:
            break;
-            case  R.id.ll_checkVersion:
+            case  R.id.ll_checkVersion: {
+                NewVersionUpdateUtil.checkUpdate(new WeakReference<Context>(this),true);
                 break;
-
+            }
         }
     }
     /**
@@ -113,10 +118,23 @@ private void initToolbar(){
 
     @Override
     protected void onDestroy() {
-         editor.putBoolean("isLoadingPicture",isLoading);
+         editor.putBoolean("isLoadingPicture", isLoading);
          editor.commit();
+         NewVersionUpdateUtil.unregisterReceiver(new WeakReference<Context>(this));
          super.onDestroy();
 
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart(this.getClass().getName());
+        MobclickAgent.onResume(this);
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(this.getClass().getName());
+        MobclickAgent.onPause(this);
     }
 }
 

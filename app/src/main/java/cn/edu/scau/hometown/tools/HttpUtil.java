@@ -7,25 +7,24 @@ import android.net.NetworkInfo;
 import android.widget.ImageView;
 
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
+
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 
-import org.apache.http .HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
+
 
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.Enumeration;
-import java.util.concurrent.Callable;
-import java.util.concurrent.FutureTask;
+
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class HttpUtil {
-    public static HttpClient httpClient = new DefaultHttpClient();
+    public static OkHttpClient client = new OkHttpClient();
     public static final String BASE_URL_KEY_WORD = "http://hometown.scau.edu.cn/course/index.php?s=/Api&keyword=";
     public static final String BASE_URL_COURSE_ID = "http://hometown.scau.edu.cn/course/index.php?s=/Api&course=";
     public static final String GET_HMT_USER_BASE_INFORMATION_URL_BY_USER_ID = "http://hometown.scau.edu.cn/bbs/plugin.php?id=iltc_open:userinfo&uid=";
@@ -44,10 +43,10 @@ public class HttpUtil {
     public static final String GET_SECOND_MARKET_GOOD_SALE_PAGE= "http://market.h.jaylin.me/index.php/Home/Api/index/p/";
     public static final String GET_SECOND_MARKET_GOOD_PURCHASE_PAGE= "http://202.116.162.17/index.php/Home/Api/purchase/index/p/";
 
-
-   //获取压缩图
-
-    public static final String GET_POST_THREADS_ATTACHMENT_Scaled_BY_TID_AND_AID="http://202.116.162.17:8200/image/getImage?id=iltc_open:attachment&action=view&tid=";
+    //图片服务器地址，APP给出需要的图片宽度，服务器返回一定宽度的图片，与给出的宽度不一定相等，只是接近
+    public static final String GET_POST_THREADS_ATTACHMENT_SCALED_BY_TID_AND_AID="http://202.116.162.17:8200/image/getImage?id=iltc_open:attachment&action=view&tid=";
+    //获取最新APP的信息，用于更新版本
+    public static final String  LATEST_VERSION_INFORMATION_URL="http://1.hiai.sinaapp.com/TestTheAppUpdate";
 
 
     /**
@@ -57,28 +56,16 @@ public class HttpUtil {
      */
     public static String getRequest(final String url) throws Exception {
 
-        FutureTask<String> task = new FutureTask<String>(
-                new Callable<String>() {
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+        Response response = client.newCall(request).execute();
+        if(response.isSuccessful()){
 
-                    @Override
-                    public String call() throws Exception {
+            return response.body().string();
+        }
 
-                        HttpGet get = new HttpGet(url);
-                        HttpResponse httpResponse = httpClient.execute(get);
-                        if (httpResponse.getStatusLine().getStatusCode() == 200) {
-
-                            String result = EntityUtils.toString(httpResponse
-                                    .getEntity());
-                            return result;
-                        }
-                        return null;
-
-                    }
-
-                });
-
-        new Thread(task).start();
-        return task.get();
+        return null;
 
     }
 
@@ -132,7 +119,7 @@ public class HttpUtil {
 
     public static  void setUserIconTask(RequestQueue requestQueue,String url, final ImageView imageView) {
 
-        ImageRequest imageRequest = new ImageRequest(url, new Response.Listener<Bitmap>() {
+        ImageRequest imageRequest = new ImageRequest(url, new com.android.volley.Response.Listener<Bitmap>() {
             @Override
             public void onResponse(Bitmap response) {
                 imageView.setImageBitmap(response);
@@ -140,7 +127,7 @@ public class HttpUtil {
 
             }
         }, 300, 200, Bitmap.Config.ARGB_4444,
-                new Response.ErrorListener() {
+                new com.android.volley.Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
 

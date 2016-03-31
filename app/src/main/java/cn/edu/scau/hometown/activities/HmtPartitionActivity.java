@@ -14,6 +14,11 @@ import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.OvershootInterpolator;
+import android.widget.ImageView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -22,8 +27,12 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import cn.edu.scau.hometown.R;
 import cn.edu.scau.hometown.adapter.InitHmtForumListViewAdapter;
@@ -31,12 +40,16 @@ import cn.edu.scau.hometown.bean.HmtForumPostContent;
 import cn.edu.scau.hometown.bean.HmtForumPostList;
 import cn.edu.scau.hometown.listener.RecyclerItemClickListener;
 import cn.edu.scau.hometown.tools.HttpUtil;
+import cn.edu.scau.hometown.view.HeartView.HeartView;
+import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
+import jp.wasabeef.recyclerview.adapters.SlideInBottomAnimationAdapter;
 
 /**
  * Created by Administrator on 2015/10/4 0004.
  */
 public class HmtPartitionActivity extends AppCompatActivity {
 
+   private  String TAG= "HmtPartitionActivity";
 
     private String tid;
     private String title;
@@ -48,8 +61,14 @@ public class HmtPartitionActivity extends AppCompatActivity {
     private CoordinatorLayout rootView;
     private SwipeRefreshLayout mSwipeRefreshWidget;
     private InitHmtForumListViewAdapter initHmtForumListViewAdapter;
+
     private RecyclerView rcv_hmt_forum;
     private boolean isClick=false;
+
+    private ImageView ivLove;
+    private ImageView ivHate;
+    private static Map<String,String>  map=null;
+    Animation animation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +76,8 @@ public class HmtPartitionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_partition);
         initToolBar();
 
-        rootView= (CoordinatorLayout) findViewById(R.id.rootview2);
+        rootView= (CoordinatorLayout) findViewById(R.id.rootview1);
+        if (rootView==null) Log.i(TAG,"rootview is null");
         mRequestQueue = Volley.newRequestQueue(HmtPartitionActivity.this);
         mSwipeRefreshWidget = (SwipeRefreshLayout) findViewById(R.id.setRefreshing);
         mSwipeRefreshWidget.setEnabled(false);
@@ -65,6 +85,48 @@ public class HmtPartitionActivity extends AppCompatActivity {
                 .applyDimension(TypedValue.COMPLEX_UNIT_DIP, 24, getResources()
                         .getDisplayMetrics()));
         VolleyRequestString(HttpUtil.GET_HMT_FORUM_POSTS_CONTENT_BY_FID + getFidByPartitionName(title) + "&page=" + nextPage + "&limit=30", 1);
+        animation= AnimationUtils.loadAnimation(this, R.anim.love_hate_image_anim);
+        initView();
+        initMap();
+
+    }
+
+    private void initMap(){
+        if (map==null){
+            map=new HashMap<>();
+            map.put("职场交流","Section_WorkplaceCommunication");
+            map.put("课程交流","Section_ExchangeCourses");
+            map.put("海洋馆","Section_MarineMuseum");
+            map.put("体坛风云","Section_Sports");
+            map.put("音乐坊","Section_Music");
+            map.put("影视分享","Section_VideoSharing");
+            map.put("情感宣泄","Section_Emotion");
+            map.put("文学社","Section_Literature");
+            map.put("生活百科","Section_Life");
+            map.put("同道堂","Section_Together");
+            map.put("广而告之","Section_Advertisement");
+            map.put("电脑维修","Section_Computer");
+            map.put("游戏版","Section_Game");
+            map.put("兼职地带","Section_Parttime");
+            map.put("论坛站务","Section_ForumStation");
+            map.put("深度思考","Section_Reflection");
+            map.put("二手市场","Section_SecondhandMarket");
+            map.put("社团组织招新","Section_Organization");
+        }
+
+    }
+
+    private void initView(){
+        ivLove=(ImageView)findViewById(R.id.item_action_love);
+        ivHate=(ImageView)findViewById(R.id.item_action_hate);
+//       if (ivLove==null)Log.i(TAB, "null");
+//        ivLove.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Log.i(TAB,"onclic");
+//                ivLove.startAnimation(animation);
+//            }
+//        });
 
     }
 
@@ -152,12 +214,13 @@ public class HmtPartitionActivity extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         mSwipeRefreshWidget.setRefreshing(false);
+
                         Snackbar sb = Snackbar.make(rootView, "发送失败", Snackbar.LENGTH_SHORT);
                         sb.getView().setBackgroundColor(getResources().getColor(R.color.tab_blue));
                         Boolean connected1 = HttpUtil.isNetworkConnected(HmtPartitionActivity.this);
                         Boolean connected2 = HttpUtil.isWifiConnected(HmtPartitionActivity.this);
                         if (connected1 == false && connected2 == false)
-                            sb.setText( "                                                              请检查网络！");
+                            sb.setText( "请检查网络！");
                         else
                         sb.setText("(*@ο@*) 哇～  很抱歉！服务器出问题了～");
                         sb.show();
@@ -197,11 +260,15 @@ public class HmtPartitionActivity extends AppCompatActivity {
         }.getType();
         HmtForumPostContent hmtForumPostContent = gson.fromJson(json, type);
 
-        Log.i("laisx","Intent");
+        Log.i("laisx", "Intent");
 
         Intent intent = new Intent(HmtPartitionActivity.this, DetialHmtPostThreadsActivity.class);
         intent.putExtra("hmtForumPostContent", hmtForumPostContent);
         intent.putExtra("tid", tid);
+        //统计各板块帖子浏览量
+        Map<String,String>  Section=new HashMap<>(1);
+        Section.put("板块",title);
+        MobclickAgent.onEvent(this,"Section",Section);
         mSwipeRefreshWidget.setRefreshing(false);
         startActivity(intent);
     }
@@ -210,6 +277,8 @@ public class HmtPartitionActivity extends AppCompatActivity {
     protected void onResume() {
         isClick=false;
         super.onResume();
+        MobclickAgent.onPageStart(this.getClass().getName());
+        MobclickAgent.onResume(this);
     }
 
     private void initRecycleView() {
@@ -219,17 +288,26 @@ public class HmtPartitionActivity extends AppCompatActivity {
         rcv_hmt_forum = (RecyclerView) findViewById(R.id.rcv_detail_partition);
         rcv_hmt_forum.setLayoutManager(linearLayoutManager);
         initHmtForumListViewAdapter = new InitHmtForumListViewAdapter(hmtForumPostList, getApplication());
-        rcv_hmt_forum.setAdapter(initHmtForumListViewAdapter);
+
+        ScaleInAnimationAdapter scaleInAdapter = new ScaleInAnimationAdapter(initHmtForumListViewAdapter);
+        SlideInBottomAnimationAdapter slideInAdapter = new SlideInBottomAnimationAdapter(scaleInAdapter);
+        slideInAdapter.setDuration(300);
+        slideInAdapter.setInterpolator(new OvershootInterpolator());
+
+
+        rcv_hmt_forum.setAdapter(slideInAdapter);
         rcv_hmt_forum.addOnItemTouchListener(
                 new RecyclerItemClickListener(this, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        if(!isClick){
+                        if (!isClick) {
+
                             mSwipeRefreshWidget.setRefreshing(true);
                             tid = hmtForumPostList.getThreads().get(position).getTid();
+
                             VolleyRequestString(HttpUtil.GET_HMT_FORUM_POSTS_CONTENT_BY_TID + tid + "&page=1&limit=10", 2);
                         }
-                        isClick=true;
+                        isClick = true;
                     }
                 })
         );
@@ -268,8 +346,20 @@ public class HmtPartitionActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        initHmtForumListViewAdapter.clean();
-        mRequestQueue.stop();
-        mRequestQueue.cancelAll(true);
+        if (initHmtForumListViewAdapter != null) {
+            initHmtForumListViewAdapter.clean();
+        }
+        if (mRequestQueue != null) {
+            mRequestQueue.stop();
+            mRequestQueue.cancelAll(true);
+        }
+    }
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(this.getClass().getName());
+        MobclickAgent.onPause(this);
     }
 }

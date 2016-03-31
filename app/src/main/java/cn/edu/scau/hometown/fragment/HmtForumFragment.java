@@ -5,13 +5,16 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -24,27 +27,34 @@ import com.bartoszlipinski.recyclerviewheader.RecyclerViewHeader;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import cn.bingoogolapple.bgabanner.BGABanner;
 import cn.edu.scau.hometown.R;
 import cn.edu.scau.hometown.activities.DetialHmtPostThreadsActivity;
+import cn.edu.scau.hometown.activities.MainActivity;
 import cn.edu.scau.hometown.adapter.InitHmtForumListViewAdapter;
 import cn.edu.scau.hometown.bean.HmtForumPostContent;
 import cn.edu.scau.hometown.bean.HmtForumPostList;
 import cn.edu.scau.hometown.bean.ImagesGuideToThreads;
 import cn.edu.scau.hometown.listener.RecyclerItemClickListener;
 import cn.edu.scau.hometown.tools.HttpUtil;
+import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
+import jp.wasabeef.recyclerview.adapters.SlideInBottomAnimationAdapter;
 
 
 /**
  * Created by acer on 2015/7/24.
  */
 public class HmtForumFragment extends Fragment {
+    private String TAG ="HmtForumFragment";
     private SwipeRefreshLayout mSwipeRefreshWidget;
     //总视图
     private View view;
@@ -98,7 +108,7 @@ public class HmtForumFragment extends Fragment {
     private void initBGAanner() {
         banner = (BGABanner) view.findViewById(R.id.banner_splash_pager);
         banner.setTransitionEffect(BGABanner.TransitionEffect.Default);
-        banner.setPageChangeDuration(1000);
+        banner.setPageChangeDuration(1500);
 
 
         DisplayImageOptions options = new DisplayImageOptions.Builder()
@@ -117,12 +127,17 @@ public class HmtForumFragment extends Fragment {
         List<View> views = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             final String tid = tids.get(i);
+            final int index=i;
             ImageView imageView = new ImageView(getActivity());
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     if (!isClick) {
+                        HashMap<String,String> map = new HashMap<String,String>();
+                        map.put("page",String.valueOf(index+1));
+                        MobclickAgent.onEvent(HmtForumFragment.this.getActivity(), "lunbotu", map);
                         VolleyRequestString(HttpUtil.GET_HMT_FORUM_POSTS_CONTENT_BY_TID + tid, 2);
                     }
                     isClick = true;
@@ -145,14 +160,21 @@ public class HmtForumFragment extends Fragment {
         rcv_hmt_forum = (RecyclerView) view.findViewById(R.id.lv_hmt_forum);
         rcv_hmt_forum.setLayoutManager(new LinearLayoutManager(getActivity()));
         initHmtForumListViewAdapter = new InitHmtForumListViewAdapter(hmtForumPostList, getActivity());
-        rcv_hmt_forum.setAdapter(initHmtForumListViewAdapter);
+
+        ScaleInAnimationAdapter scaleInAdapter = new ScaleInAnimationAdapter(initHmtForumListViewAdapter);
+        SlideInBottomAnimationAdapter slideInAdapter = new SlideInBottomAnimationAdapter(scaleInAdapter);
+        slideInAdapter.setDuration(300);
+        slideInAdapter.setInterpolator(new OvershootInterpolator());
+
+
+        rcv_hmt_forum.setAdapter(slideInAdapter);
         rcv_hmt_forum.addOnItemTouchListener(
                 new RecyclerItemClickListener(getActivity(), new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
                         if (!isClick) {
                             tid = hmtForumPostList.getThreads().get(position).getTid();
-                            authorName=hmtForumPostList.getThreads().get(position).getAuthor();
+                            authorName = hmtForumPostList.getThreads().get(position).getAuthor();
                             VolleyRequestString(HttpUtil.GET_HMT_FORUM_POSTS_CONTENT_BY_TID + tid + "&page=1&limit=10", 2);
 
                         }
@@ -230,7 +252,8 @@ public class HmtForumFragment extends Fragment {
         java.lang.reflect.Type type = new TypeToken<HmtForumPostContent>() {
         }.getType();
         HmtForumPostContent hmtForumPostContent = gson.fromJson(json, type);
-
+         Log.i(TAG,"click,,,");
+        MobclickAgent.onEvent(getActivity(), "Page_RecommendClickRate");
         Intent intent = new Intent(getActivity(), DetialHmtPostThreadsActivity.class);
         intent.putExtra("hmtForumPostContent", hmtForumPostContent);
         intent.putExtra("tid", tid);
@@ -254,5 +277,12 @@ public class HmtForumFragment extends Fragment {
     public void onResume() {
         isClick = false;
         super.onResume();
+        MobclickAgent.onPageStart(this.getClass().getName());
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(this.getClass().getName());
     }
 }

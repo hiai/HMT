@@ -37,6 +37,10 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import org.json.JSONObject;
 
@@ -59,6 +63,8 @@ import cn.edu.scau.hometown.R;
 /**
  * Created by Administrator on 2015/9/2 0002.
  * 用于渲染论坛帖子回帖列表，填充帖子回帖列表视图的Adapter类
+ *
+ * 图片缓存将在下一个版本中用Fresco代替，以提升加载速度
  *
  */
 public class InitDetailHmtForumListViewAdapter extends RecyclerView.Adapter<InitDetailHmtForumListViewAdapter.ViewHolder> {
@@ -328,21 +334,24 @@ public class InitDetailHmtForumListViewAdapter extends RecyclerView.Adapter<Init
     }
     private void getAndSetImage(final TextView tv, final SpannableString spannableString, final int startAttach, final int endAttach, String aid) {
 
-        final String url = HttpUtil.GET_POST_THREADS_ATTACHMENT_Scaled_BY_TID_AND_AID + tid + "&aid=" + aid + "&width="+getImageViewWidth(tv);
-        Log.i("url--->", url);
-        //   判断SD卡缓存中是否已经存在该图片 （压缩图）
-        if (ImageBuffer.isExist( url)) {
-            Log.i("Image--->","isExist");
-            //存在则从内存或SD卡中获取
-            setImage(tv, url, spannableString, startAttach, endAttach);
-        } else {
-            Log.i("Image--->", "notExist");
-        ImageRequest imageRequest = new ImageRequest(url, new Response.Listener<Bitmap>() {
+        final String url = HttpUtil.GET_POST_THREADS_ATTACHMENT_SCALED_BY_TID_AND_AID + tid + "&aid=" + aid + "&width="+getImageViewWidth(tv);
+        ImageLoader imageLoader = ImageLoader.getInstance();
+        imageLoader.loadImage(url, new SimpleImageLoadingListener() {
             @Override
-            public void onResponse(Bitmap response) {
-                Log.i("res--->", String.valueOf(response.getWidth()));
-                Bitmap bitmap = response;
+            public void onLoadingStarted(String imageUri, View view) {
+                super.onLoadingStarted(imageUri, view);
+            }
 
+            @Override
+            public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+                super.onLoadingFailed(imageUri, view, failReason);
+                spannableString.setSpan(new StrikethroughSpan(), startAttach, endAttach, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+                tv.setText(spannableString);
+            }
+
+            @Override
+            public void onLoadingComplete(String imageUri, View view, Bitmap bitmap) {
+                super.onLoadingComplete(imageUri, view, bitmap);
                 ImageSpan span = new ImageSpan(context, bitmap);
                 ClickableSpan clickableSpan = new ClickableSpan() {
                     @Override
@@ -359,22 +368,13 @@ public class InitDetailHmtForumListViewAdapter extends RecyclerView.Adapter<Init
                 tv.setMovementMethod(LinkMovementMethod.getInstance());
                 tv.setText(spannableString);
 
-                //存入缓存和SD卡中
-                ImageBuffer.saveBmpToSd(response, url);
-         }
-        }, 600, 900, Bitmap.Config.ARGB_4444,
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
+            }
 
-                        spannableString.setSpan(new StrikethroughSpan(), startAttach, endAttach, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
-                        tv.setText(spannableString);
-
-                    }
-                });
-            imageRequest.setTag(true);
-        mRequestQueue.add(imageRequest);
-    }
+            @Override
+            public void onLoadingCancelled(String imageUri, View view) {
+                super.onLoadingCancelled(imageUri, view);
+            }
+        });
     }
 
     /**

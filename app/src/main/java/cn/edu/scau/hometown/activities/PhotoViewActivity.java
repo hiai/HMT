@@ -32,6 +32,7 @@ import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.CloseableStaticBitmap;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.squareup.leakcanary.RefWatcher;
+import com.umeng.analytics.MobclickAgent;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -47,26 +48,26 @@ import cn.edu.scau.hometown.tools.ImageBuffer;
 import cn.edu.scau.hometown.view.CircularProgress;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
-/**created by hiai
- *
- *查看图片的activity
+/**
+ * created by hiai
+ * <p/>
+ * 查看图片的activity
  */
-public class PhotoViewActivity extends AppCompatActivity implements OnClickListener{
+public class PhotoViewActivity extends AppCompatActivity implements OnClickListener {
 
     private String url;
-    private  ImageView imageView;
-    private  PhotoViewAttacher mAttacher;
-    private  CircularProgress progressView;
+    private ImageView imageView;
+    private PhotoViewAttacher mAttacher;
+    private CircularProgress progressView;
     private Toolbar toolbar;
-    private   CloseableReference<CloseableStaticBitmap> imageReference;
+    private CloseableReference<CloseableStaticBitmap> imageReference;
     private Button savePhoto;
     private static Bitmap bitmap;
     private AlertDialog alertDialog;
     private ViewGroup viewGroup;
     private ProgressDialog progressDialog;
-    private  Handler mhandler;
-    private  CloseableStaticBitmap image;
-
+    private Handler mhandler;
+    private CloseableStaticBitmap image;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,56 +76,51 @@ public class PhotoViewActivity extends AppCompatActivity implements OnClickListe
         setContentView(R.layout.activity_photo_view);
         initView();
         initToolbar();
-        url=(String)getIntent().getSerializableExtra("url");
+        url = (String) getIntent().getSerializableExtra("url");
         getImage();
-        mhandler=new Handler();
-
+        mhandler = new Handler();
     }
 
 
-    private void  initView(){
+    private void initView() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        imageView=(ImageView)findViewById(R.id.imgview);
-        progressView = (CircularProgress)findViewById(R.id.Progress_view);
-        savePhoto=(Button)findViewById(R.id.savePhoto);
-        viewGroup=(ViewGroup)findViewById(R.id.rl_parent);
+        imageView = (ImageView) findViewById(R.id.imgview);
+        progressView = (CircularProgress) findViewById(R.id.Progress_view);
+        savePhoto = (Button) findViewById(R.id.savePhoto);
+        viewGroup = (ViewGroup) findViewById(R.id.rl_parent);
         savePhoto.setOnClickListener(this);
-
     }
-    private void initToolbar(){
 
+    private void initToolbar() {
         toolbar.setBackgroundColor(getResources().getColor(R.color.tab_blue));
         setSupportActionBar(toolbar);
-
-
     }
-    private void getImage(){
-       Uri uri = Uri.parse(url);
-        ImageRequest request=ImageRequest.fromUri(uri);
+
+    private void getImage() {
+        Uri uri = Uri.parse(url);
+        ImageRequest request = ImageRequest.fromUri(uri);
         ImagePipeline imagePipeline = Fresco.getImagePipeline();
         DataSource<CloseableReference<CloseableImage>>
                 dataSource = imagePipeline.fetchDecodedImage(request, this);
-
         DataSubscriber dataSubscriber =
                 new BaseDataSubscriber<CloseableReference<CloseableStaticBitmap>>() {
                     @Override
                     public void onNewResultImpl(
                             DataSource<CloseableReference<CloseableStaticBitmap>> dataSource) {
-
                         if (!dataSource.isFinished()) {
 
                         }
-
                         CloseableReference<CloseableStaticBitmap> imageReference = dataSource.getResult();
                         if (imageReference != null) {
 
                             Message message = new Message();
-                            message.obj=imageReference;
-                            message.arg1=1;
+                            message.obj = imageReference;
+                            message.arg1 = 1;
                             myHandler.sendMessage(message);
 
                         }
                     }
+
                     @Override
                     public void onFailureImpl(DataSource dataSource) {
                         Throwable throwable = dataSource.getFailureCause();
@@ -135,53 +131,41 @@ public class PhotoViewActivity extends AppCompatActivity implements OnClickListe
 
     }
 
-    private  Handler myHandler = new Handler(){
+    private Handler myHandler = new Handler() {
         @Override
-        public void handleMessage(Message msg){
-            switch (msg.arg1){
-            case 1:
-            {
-            super.handleMessage(msg);
-            imageReference=(CloseableReference<CloseableStaticBitmap>)msg.obj;
+        public void handleMessage(Message msg) {
+            switch (msg.arg1) {
+                case 1: {
+                    super.handleMessage(msg);
+                    imageReference = (CloseableReference<CloseableStaticBitmap>) msg.obj;
 
-            image = imageReference.get();
-            bitmap=image.getUnderlyingBitmap();
+                    image = imageReference.get();
+                    bitmap = image.getUnderlyingBitmap();
 
-            imageView.setImageBitmap(bitmap);
-
-            mAttacher = new PhotoViewAttacher(imageView);
-            progressView.setVisibility(View.GONE);
-            imageView.setVisibility(View.VISIBLE);
-            imageView.invalidate();
-
-
-            }
-            break;
-                case 2:{
+                    imageView.setImageBitmap(bitmap);
+                    mAttacher = new PhotoViewAttacher(imageView);
+                    progressView.setVisibility(View.GONE);
+                    imageView.setVisibility(View.VISIBLE);
+                    imageView.invalidate();
+                }
+                break;
+                case 2: {
                     Toast.makeText(PhotoViewActivity.this, "成功保存图片至/hongmantang/红满堂",
                             Toast.LENGTH_SHORT).show();
                 }
                 break;
-        }
-
+            }
         }
     };
 
-
-
-
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.savePhoto:
-
                 SavePhoto();
-
                 break;
-
         }
     }
-
 
     private void SavePhoto() {
         if (bitmap != null) {
@@ -192,47 +176,52 @@ public class PhotoViewActivity extends AppCompatActivity implements OnClickListe
                     if (!picFileDir.exists()) {
                         picFileDir.mkdir();
                     }
-
                     String photoName = ImageBuffer.convertUrlToFileName(url);
                     File file = new File(picFileDir + "/" + photoName);
                     try {
                         if (file.createNewFile()) {
-
                             OutputStream outStream = new FileOutputStream(file);
                             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream);
                             outStream.flush();
                             outStream.close();
-
                         }
                     } catch (FileNotFoundException e) {
 
                     } catch (IOException e) {
-                        Log.w("test----->", e.toString());
+
                     }
                     Message message = Message.obtain();
                     message.arg1 = 2;
                     myHandler.sendMessage(message);
-
                 }
             }).start();
-
-
         }
-
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        RefWatcher refWatcher= MyApplication.getRefWatcher(this);
+        RefWatcher refWatcher = MyApplication.getRefWatcher(this);
         refWatcher.watch(imageReference);
-        if(imageReference!=null)  {
+        if (imageReference != null) {
             imageReference.close();
         }
         image.close();
-
-
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart(this.getClass().getName());
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(this.getClass().getName());
+        MobclickAgent.onPause(this);
+    }
 }
 
 

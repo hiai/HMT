@@ -1,10 +1,16 @@
 package cn.edu.scau.hometown.activities;
 
 import android.animation.ArgbEvaluator;
+import android.app.DownloadManager;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Bundle;
+import android.content.IntentFilter;
+import android.os.*;
+import android.os.Process;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -15,26 +21,36 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.widget.ImageView;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.umeng.analytics.MobclickAgent;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
 import cn.edu.scau.hometown.R;
+import cn.edu.scau.hometown.bean.LatestVersionInfo;
+import cn.edu.scau.hometown.broadcastReceiver.InstallNewVersionAppReceiver;
 import cn.edu.scau.hometown.fragment.FocusFragment;
 import cn.edu.scau.hometown.fragment.HmtForumFragment;
 import cn.edu.scau.hometown.fragment.PartitionFragment;
 import cn.edu.scau.hometown.fragment.SecondHandMarketFragment;
+
+import cn.edu.scau.hometown.tools.NewVersionUpdateUtil;
+
 
 /**
  * Created by Administrator on 2015/7/26 0026.
  * 程序已启动时展示的主界面
  */
 public class MainActivity extends AppCompatActivity {
+
+    private String TAG ="MainActivity";
     //计算是否退出应用所需的时间
     private long firstTime;
     //退出时弹出snackBar用到的父级容器
@@ -49,26 +65,36 @@ public class MainActivity extends AppCompatActivity {
     private List<Fragment> fragments;
     private FragAdapter mAdapter;
 
+    private LatestVersionInfo info;
+    private InstallNewVersionAppReceiver receiver;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Fresco.initialize(getApplicationContext());
         setContentView(R.layout.activity_main);
         ll_main = (CoordinatorLayout) findViewById(R.id.main);
+
         fragments=new ArrayList<Fragment>();
         fragments.add(new SecondHandMarketFragment());
+
         fragments.add(new HmtForumFragment());
         fragments.add(new PartitionFragment());
         fragments.add(new FocusFragment());
 
         InitToolBar();
         InitTabLayout();
+        NewVersionUpdateUtil.checkUpdate(new WeakReference<Context>(this),false);
+
     }
+
+
 
 
 
     private void InitToolBar() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+
         toolbar.setTitle("华农人的红满堂");
         toolbar.setBackgroundColor(getResources().getColor(R.color.tab_red));
         setSupportActionBar(toolbar);
@@ -80,6 +106,11 @@ public class MainActivity extends AppCompatActivity {
         drawerToggle.syncState();
     }
 
+    @Override
+    protected void onDestroy() {
+        NewVersionUpdateUtil.unregisterReceiver(new WeakReference<Context>(this));
+        super.onDestroy();
+    }
 
     private void InitTabLayout() {
 
@@ -161,11 +192,28 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
 
-                if (position == 0) snackBarBackGroupColor = "Tab_red";
-                else if (position == 1) snackBarBackGroupColor = "Tab_blue";
-                else if (position == 2) snackBarBackGroupColor = "Tab_purple";
-                else if (position == 3) snackBarBackGroupColor = "Tab_pink";
-                else if (position == 4) snackBarBackGroupColor = "Tab_brown";
+
+                if (position == 0) {
+                    snackBarBackGroupColor = "Tab_red";
+                    MobclickAgent.onEvent(MainActivity.this,"Page_SecondHand");
+                }
+
+                else if (position == 1) {
+                    snackBarBackGroupColor = "Tab_blue";
+                    MobclickAgent.onEvent(MainActivity.this,"Page_Recommend");
+                }
+                else if (position == 2){
+                    snackBarBackGroupColor = "Tab_purple";
+                    MobclickAgent.onEvent(MainActivity.this,"Page_Partition");
+                }
+                else if (position == 3){
+                    snackBarBackGroupColor = "Tab_pink";
+                    MobclickAgent.onEvent(MainActivity.this,"Page_Follow");
+                }
+                else if (position == 4){
+                    snackBarBackGroupColor = "Tab_brown";
+                }
+
 
             }
 
@@ -174,7 +222,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        mAdapter=new FragAdapter(getSupportFragmentManager(),fragments);
+        mAdapter = new FragAdapter(getSupportFragmentManager(), fragments);
         mTabLayout.setTabsFromPagerAdapter(mAdapter);
         viewPager.setAdapter(mAdapter);
         mTabLayout.setupWithViewPager(viewPager);
@@ -204,7 +252,9 @@ public class MainActivity extends AppCompatActivity {
                 sb.show();
                 firstTime = secondTime;
             } else {
-                finish();
+                MobclickAgent.onKillProcess(this);
+                android.os.Process.killProcess(Process.myPid());
+
             }
         }
     }
@@ -233,11 +283,19 @@ public class MainActivity extends AppCompatActivity {
 
         return true;
     }
-
-
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
 
 }
+
 class FragAdapter extends FragmentPagerAdapter {
     private List<Fragment> fragments;
 
@@ -263,11 +321,11 @@ class FragAdapter extends FragmentPagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        if(position==0) return "二手";
-        else if(position==1) return "推荐";
-        else if(position==2) return "分区";
-        else if(position==3) return "关注";
-        else return  "其它";
+        if (position == 0) return "二手";
+        else if (position == 1) return "推荐";
+        else if (position == 2) return "分区";
+        else if (position == 3) return "关注";
+        else return "其它";
     }
 
 }

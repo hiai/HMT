@@ -2,6 +2,14 @@
 <project version="4">
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/app/src/main/java/cn/edu/scau/hometown/view/CircularProgress.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/bg_bombbox.9.png" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/btn_cancel.9.png" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/btn_cancel_selector.xml" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/btn_ok_selector.xml" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/dialog_bottom_bg.xml" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/dialog_btn_cancel_pressed.png" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/dialog_btn_ok_normal.png" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/dialog_btn_ok_pressed.png" charset="GBK" />
     <file url="PROJECT" charset="UTF-8" />
   </component>
 </project>
